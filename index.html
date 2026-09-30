@@ -2,14 +2,14 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover,maximum-scale=1,user-scalable=no">
 <title>Thương Vụ Tỷ Đô</title>
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#dfe8f5}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b111f}}
 :root[data-theme="dark"]{--bg:#0b111f}
 html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
-body{margin:0;height:100%;background:var(--bg);display:grid;place-items:center}
+body{margin:0;overscroll-behavior:none;touch-action:none;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;height:100%;background:var(--bg);display:grid;place-items:center}
 canvas{touch-action:none;display:block;width:100%;max-width:calc(100vh*16/9);height:auto;aspect-ratio:16/9;image-rendering:pixelated}
 #tc{display:none;position:fixed;inset:0;pointer-events:none;user-select:none;-webkit-user-select:none}
 #tc *{pointer-events:auto;touch-action:none}
@@ -65,6 +65,7 @@ const LAMPS=[[25,172,84],[97,172,84],[279,172,84],[352,172,84]];
 const VEH=[[112,171,'bike','#c9382f'],[124,171,'bike','#22262e'],[268,171,'bike','#2f6bd0']];
 
 /* ================= UTILS ================= */
+const CRS=matchMedia('(pointer:coarse)').matches,SY=CRS?4:2,shf=a=>{a=a.slice();for(let i=a.length;i>1;){const j=Math.random()*i--|0;[a[i],a[j]]=[a[j],a[i]]}return a};
 const buf=document.createElement('canvas');buf.width=W;buf.height=H;
 const WINS=[],FLAGS=[];let g=buf.getContext('2d');g.imageSmoothingEnabled=false;
 const R=(x,y,w,h,c)=>{g.fillStyle=c;g.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))};
@@ -78,7 +79,7 @@ const sh=(h,f)=>'#'+[1,3,5].map(i=>Math.max(0,Math.min(255,Math.round(parseInt(h
 /* Font pixel 3x5 (mỗi chữ số = 1 hàng, hệ bát phân) + dấu tiếng Việt */
 const F={A:'25755',B:'65656',C:'34443',D:'65556',E:'74647',F:'74644',G:'34553',H:'55755',I:'72227',J:'11152',K:'55655',L:'44447',M:'57755',N:'65555',O:'25552',P:'65644',Q:'25563',R:'65655',S:'34216',T:'72222',U:'55557',V:'55552',W:'55775',X:'55255',Y:'55222',Z:'71247'};
 Object.assign(F,{0:'75557',1:'26227',2:'61247',3:'61216',4:'55711',5:'74616',6:'34757',7:'71222',8:'75757',9:'75716','[':'64446',']':'31113','!':'22202','?':'61202','.':'00002',',':'00024',':':'02020','-':'00700','\u0110':'65556'});
-function text(s,x,y,c,k=1){s=s.normalize('NFD');let cx=x,lx=x,cir=0;
+const _nf={};function text(s,x,y,c,k=1){s=_nf[s]||(_nf[s]=s.normalize('NFD'));let cx=x,lx=x,cir=0;
   for(const ch of s){
     if(ch==='\u0302'){R(lx+k,y-2*k,k,k,c);cir=1;continue}
     if(ch==='\u0301'){R(lx+2*k,y-(2+cir)*k,k,k,c);continue}
@@ -269,7 +270,7 @@ on(L.fg,()=>{canopy([[6,0,26],[34,-5,20],[-6,26,18],[26,12,12],[52,-8,14]],71);c
 const TSPR=TREES.map(([x,b,s,sd])=>{const c=mk(100,105),ox=x-50,oy=b-100;on(c,()=>drawTree(x,b,s,sd),ox,oy);return{c,ox,oy}});
 
 /* ================= WORLD ANIMATION ================= */
-function swayBlit(c,ox,oy,t,amp,ph,base){for(let y=0;y<c.height;y+=2){const k=Math.max(0,Math.min(1,(base-(oy+y))/26)),o=Math.round(Math.sin(t*1.4+y*.16+ph)*amp*k);g.drawImage(c,0,y,c.width,2,ox+o,oy+y,c.width,2)}}
+function swayBlit(c,ox,oy,t,amp,ph,base){for(let y=0;y<c.height;y+=SY){const k=Math.max(0,Math.min(1,(base-(oy+y))/26)),o=Math.round(Math.sin(t*1.4+y*.16+ph)*amp*k);g.drawImage(c,0,y,c.width,SY,ox+o,oy+y,c.width,SY)}}
 function flagCloth(x,y,t){for(let i=0;i<12;i++){const o=Math.round(Math.sin(t*5+i*.7)*(i/11)*1.4);R(x+1+i,y+o,1,8,'#d62a2a');px(x+1+i,y+7+o,'#a81d1d')}
   spr(x+5,y+2+Math.round(Math.sin(t*5+3.5)*.5),['00100','11111','01110','01010'],['#ffdf3a'])}
 function lampFx([x,b,h],i,t){drawLamp(x,b,h);const dip=Math.sin(t*19+i*4)*Math.sin(t*5.3+i)>.9;
@@ -375,7 +376,7 @@ class CollisionManager{
     if(b.x<m.x0||b.x+b.w>m.x1||y<m.y0||y>m.y1)return false;
     return !this.solids.some(s=>hit(b,s))}
 }
-const wrap=(s,mw)=>{const o=[];let c='';s.split(' ').forEach(w=>{const n=c?c+' '+w:w;if(tw(n)>mw&&c){o.push(c);c=w}else c=n});o.push(c);return o};
+const wrap=(s,mw)=>{const K=s+'|'+mw,M=wrap.m||(wrap.m={});if(M[K])return M[K];const o=[];let c='';s.split(' ').forEach(w=>{const n=c?c+' '+w:w;if(tw(n)>mw&&c){o.push(c);c=w}else c=n});o.push(c);return M[K]=o};
 class DialogueManager{
   constructor(){this.on=false}
   open(G,o){this.on=true;this.o=o;this.pages=o.pages.map(s=>s.toUpperCase().normalize('NFC'));this.p=0;this.c=0;
@@ -433,8 +434,9 @@ class Game{
       else if(/^Digit[1-5]$/.test(e.code)&&this.q)Q.pick(+e.code[5]-1);else if(/^Digit[1-5]$/.test(e.code)&&!this.dlg.on&&!this.seq)this.player.emote(['HAPPY','THINKING','ANGRY','SURPRISED','TALK'][+e.code[5]-1],1.6)});
     addEventListener('keyup',e=>{if(M[e.code])this.keys[M[e.code]]=false});
     addEventListener('blur',()=>{this.keys={}})}
-  frame(ts){const dt=Math.min(.05,(ts-(this.last||ts))/1000);this.last=ts;this.time+=dt;if(dt)this.fps+=(1/dt-this.fps)*.1;
-    this.update(dt);this.render();present();requestAnimationFrame(t=>this.frame(t))}
+  frame(ts){requestAnimationFrame(t=>this.frame(t));if(this.last&&ts-this.last<(CRS?28:0))return;
+    const dt=Math.min(.05,(ts-(this.last||ts))/1000);this.last=ts;this.time+=dt;if(dt)this.fps+=(1/dt-this.fps)*.1;
+    try{this.update(dt)}catch(e){console.error(e)}try{this.render();present()}catch(e){console.error(e)}}
   update(dt){this.player.update(dt,this);this.npcs.forEach(n=>n.update(dt,this));
     TRAFFIC.forEach(v=>{v.x+=v.vx*dt;if(v.vx<0&&v.x<-50)v.x=W+40;if(v.vx>0&&v.x>W+40)v.x=-50});
     this.inter.update(this);this.dlg.update(dt,this);stepParts(dt,this.time)}
@@ -575,7 +577,7 @@ Object.assign(Game.prototype,{
     if(a){const e=Math.min(1,a.t/.6),off=Math.round(e*e*(3-2*e)*W);      // camera trượt mượt, quantize theo pixel
       this.renderMap(MAPS[a.to],a.d*(W-off),false);this.renderMap(MAPS[a.from],-a.d*off,true)}
     else this.renderMap(this.map,0,true);
-    const tg=this.target;if(tg&&!this.dlg.on)tg.n?prompt(tg.n.x,tg.n.y-46,'[E] INTERACT',tg.n.name):prompt(p.x,p.y-46,tg.x?'[E] EXIT':'[E] ENTER',tg.x?'CỬA RA':this.map.names[tg.i]);
+    const tg=this.target;if(tg&&!this.dlg.on)tg.n?prompt(tg.n.x,tg.n.y-46,'[E] INTERACT',tg.n.name):prompt(p.x,p.y-46,tg.x?'[E] EXIT':offAt(this.map.key,tg.i)?'[E] ENTER':'[E] CHƠI',tg.x?'CỬA RA':this.map.names[tg.i]);
     this.dlg.draw(this);
     if(t<8&&!this.dlg.on){text(CFG.hint,7,7,'#0e1730');text(CFG.hint,6,6,'#ffffff')}
     if(this.toast&&!a){const q=this.toast,s=q.s,w=tw(s)+12;g.globalAlpha=Math.max(0,Math.min(1,q.t*4,(3-q.t)*2));
@@ -595,7 +597,9 @@ InteractionManager.prototype.press=function(G){if(G.dlg.on)return G.dlg.press(G)
 Object.assign(F,{'%':'51245','/':'11244','(':'24442',')':'42224','+':'02720'});
 const cl=v=>Math.max(0,Math.min(100,v)),r1=v=>Math.round(v*10)/10,C=(t,tr,sc,v,need)=>({t,tr,sc,v,need});
 const NG=['Hai bên đã thống nhất điều khoản.','Được, tôi chấp nhận nâng định giá.','Định giá đó quá cao, tôi giảm vốn đầu tư.','Hợp lý, ta chốt vòng nhỏ hơn.'];
-const NOPTS=['Chấp nhận đề xuất này','Đề nghị định giá cao hơn','Xin ít vốn hơn, giữ nhiều cổ phần hơn'];
+const NOPTS=['Chấp nhận đề xuất này','Đòi định giá cao hơn, dẫn số liệu','Xin ít vốn hơn để giữ nhiều cổ phần','Dọa rút lui: có quỹ khác trả cao hơn'],
+NW=['Số liệu của bạn có sức nặng. Tôi nâng điều khoản cho bạn.','Bạn đàm phán cứng thật. Tôi chịu nhượng thêm.','Được, bạn thuyết phục được tôi. Chốt với điều khoản này.'],
+NL=['Lập luận chưa đủ sức nặng. Tôi giữ quan điểm và siết điều khoản.','Tôi không bị thuyết phục. Đây đã là giới hạn của quỹ.','Tôi không nhượng bộ thêm. Đây là con số cuối cùng.'];
 const BACK='Giám đốc đang đợi anh chị ở phòng bên trong.';
 const STY={
  pe:{wall:'#dfe3ea',wall2:'#c5cbd6',floor:'#8a6a4a',floor2:'#7a5c3e',trim:'#1e2f5a',acc:'#e0362c',desk:'#5a3b24',deskTop:'#8a6238',sofa:'#2b3a5c',pat:0,post:2},
@@ -677,11 +681,11 @@ function guide(k){const m=G.map,c=m.fund,p=G.player,r=m.recep;r.hold=true;p.busy
 
 /* ---- quest / negotiation engine (đọc hoàn toàn từ INVESTOR_OFFICES) ---- */
 function askQ(k){const s=qstate(k),c=INVESTOR_OFFICES[k];if(s.i>=s.qs.length)return c.svc?svcDone(k):negoStart(k);
-  s.ph='qa';G.q={k,mode:'ask',q:s.qs[s.i],rx:''};G.player.busy=true;G.player.set('THINKING');G.map.inv.busy=true;G.map.inv.set('TALK')}
+  s.ph='qa';const q0=s.qs[s.i];G.q={k,mode:'ask',q:{...q0,c:shf(q0.c)},rx:''};G.player.busy=true;G.player.set('THINKING');G.map.inv.busy=true;G.map.inv.set('TALK')}
 function negoStart(k){const s=qstate(k),n=s.nego;s.ph='nego';s.pre=Math.round(n.val0*(1+s.vm/100));
   s.amount=s.trust<n.floor?0:r1(n.ask*(.5+.5*Math.min(1,(s.trust-n.floor)/(n.full-n.floor))));
   if(!s.amount){G.q=null;return finish(k)}
-  s.eq=s.amount/(s.pre+s.amount);G.q={k,mode:'nego',rx:''};G.map.inv.set('INTERACT')}
+  s.eq=s.amount/(s.pre+s.amount);s.nr=0;s.end=0;G.q={k,mode:'nego',rx:''};G.map.inv.set('INTERACT')}
 const mxs=(c,k)=>qstate(k).qs.reduce((a,q)=>a+Math.max(...q.c.map(x=>x.sc)),0);
 function resPages(k){const s=qstate(k),c=INVESTOR_OFFICES[k];
   return[c.end[s.tier],(s.tier?`VỐN ${s.amount} TRIỆU USD - ĐỊNH GIÁ ${s.pre} TRIỆU - NHƯỢNG ${(s.eq*100).toFixed(1)}% - `:'')+`ĐIỂM ${s.score}/${mxs(c,k)} - TIN TƯỞNG ${s.trust}`]}
@@ -695,22 +699,26 @@ const Q={
   pick(n){const q=G.q;if(!q||(q.mode!=='ask'&&q.mode!=='nego'))return;const s=qstate(q.k),c=INVESTOR_OFFICES[q.k],inv=G.map.inv;
     if(q.mode==='ask'){let ch=q.q.c[n];if(!ch)return;const bad=ch.need&&!(CO.prep.fin&&CO.prep.law);if(bad)ch={...ch,tr:-10,sc:0,v:-6};s.trust=cl(s.trust+ch.tr);s.score+=ch.sc;s.vm+=ch.v;s.i++;
       q.rx=bad?'DATA ROOM KHÔNG KHỚP VỚI ĐIỀU BẠN NÓI. TÔI MẤT NIỀM TIN.':c.react[ch.tr>=5?2:ch.tr>=0?1:0];q.mode='react';inv.set(ch.tr>=0?'INTERACT':'THINKING');G.player.set('INTERACT')}
-    else{if(n>2)return;const nc=s.nego;
-      if(n===1){if(s.trust>=nc.ct){s.pre=Math.round(s.pre*1.12);s.trust=cl(s.trust+3);q.rx=NG[1]}else{s.amount=r1(s.amount*.75);s.trust=cl(s.trust-8);q.rx=NG[2]}}
-      else if(n===2){s.amount=r1(s.amount*.7);s.trust=cl(s.trust+4);q.rx=NG[3]}else q.rx=NG[0];
-      s.eq=s.amount/(s.pre+s.amount);q.mode='nreact'}},
-  next(){const q=G.q;if(!q)return;if(q.mode==='react')askQ(q.k);else if(q.mode==='nreact')finish(q.k)}};
+    else{if(n>3)return;const nc=s.nego,r=s.nr,w=Math.random;
+      if(!n){q.rx=NG[0];s.end=1}
+      else{const pl=s.trust+s.score/mxs(c,q.k)*25+w()*20-10,iv=nc.ct+r*6+(n===3?8:n===1?3:-2)+w()*20-10,ok=pl>iv;
+        if(n===1){s.pre=Math.round(s.pre*(ok?1.15:.92));s.trust=cl(s.trust+(ok?3:-4))}
+        else if(n===2){if(ok)s.amount=r1(s.amount*.75);else s.pre=Math.round(s.pre*.9);s.trust=cl(s.trust+(ok?3:-5))}
+        else{s.pre=Math.round(s.pre*(ok?1.3:.85));s.amount=r1(s.amount*(ok?1.1:.7));s.trust=cl(s.trust+(ok?5:-12))}
+        q.rx=`BẠN ${pl|0} - QUỸ ${iv|0}. `+(ok?NW:NL)[r];s.nr++;if(s.nr>=3||s.trust<nc.floor)s.end=1}
+      s.eq=s.amount/(s.pre+s.amount);q.mode='nreact';inv.set('INTERACT')}},
+  next(){const q=G.q;if(!q)return;if(q.mode==='react')askQ(q.k);else if(q.mode==='nreact'){if(qstate(q.k).end)finish(q.k);else{q.mode='nego';q.rx=''}}}};
 function drawQ(){const q=G.q;if(!q)return;const c=INVESTOR_OFFICES[q.k],s=qstate(q.k),up=t=>t.toUpperCase().normalize('NFC'),ask=q.mode==='ask',ng=q.mode==='nego'||q.mode==='nreact';
   R(5,100,350,100,'#e9f0ff');R(6,101,348,98,'#0e1730');R(6,101,348,1,'#2a4a8a');
-  const nm=c.inv.name,tt=ng?'ĐÀM PHÁN':'CÂU '+(ask?s.i+1:s.i)+'/'+s.qs.length+'  '+(ask?q.q.topic:'');
+  const nm=c.inv.name,tt=ng?'ĐÀM PHÁN '+Math.max(1,Math.min(3,s.nr+(q.mode==='nreact'?0:1)))+'/3':'CÂU '+(ask?s.i+1:s.i)+'/'+s.qs.length+'  '+(ask?q.q.topic:'');
   const tb=tw(nm)+tw(tt)+16;R(11,91,tb+2,11,'#e9f0ff');R(12,92,tb,10,'#2a4a8a');text(nm,16,95,'#fff');text(tt,16+tw(nm)+8,95,'#f2c46b');
   text('TIN TƯỞNG',262,106,'#9fb4d8');R(306,105,42,6,'#2a3350');R(307,106,Math.round(s.trust*.4),4,s.trust>=50?'#5cba4c':s.trust>=35?'#f2c46b':'#d62a2a');
   text('ĐIỂM '+s.score,12,106,'#9fb4d8');
   let body,y=118;
-  if(ask)body=q.q.q;else if(q.mode==='nego')body=`${c.inv.name} ĐỀ XUẤT: ${s.amount} TRIỆU USD CHO ${(s.eq*100).toFixed(1)}% VỐN, ĐỊNH GIÁ TRƯỚC VỐN ${s.pre} TRIỆU USD. SAU VÒNG BẠN CÒN ${r1(CO.own*(1-s.eq))}% CỔ PHẦN.`;
-  else body=q.rx+(q.mode==='nreact'?`  CHỐT: ${s.amount} TRIỆU USD - ${(s.eq*100).toFixed(1)}% - ĐỊNH GIÁ ${s.pre} TRIỆU.`:'');
+  if(ask)body=q.q.q;else if(q.mode==='nego')body=`${s.nr>1?'LẦN CUỐI! ':''}${c.inv.name} ĐỀ XUẤT: ${s.amount} TRIỆU USD CHO ${(s.eq*100).toFixed(1)}% VỐN, ĐỊNH GIÁ TRƯỚC VỐN ${s.pre} TRIỆU USD. SAU VÒNG BẠN CÒN ${r1(CO.own*(1-s.eq))}% CỔ PHẦN.`;
+  else body=q.rx+(q.mode==='nreact'?`  ${s.end?'CHỐT':'HIỆN TẠI'}: ${s.amount} TRIỆU USD - ${(s.eq*100).toFixed(1)}% - ĐỊNH GIÁ ${s.pre} TRIỆU.`:'');
   wrap(up(body),336).forEach(l=>{text(l,12,y,'#fff');y+=9});
-  if(ask||q.mode==='nego'){y=Math.max(y+4,136);(ask?q.q.c.map(x=>x.t):NOPTS).forEach((t,i)=>{wrap(up('['+(i+1)+'] '+t),336).forEach((l,j)=>{text(l,12+(j?12:0),y,ask||i<3?'#f2c46b':'#fff');y+=8});y+=3})}
+  if(ask||q.mode==='nego'){y=Math.max(y+4,136);(ask?q.q.c.map(x=>x.t):NOPTS).forEach((t,i)=>{wrap(up('['+(i+1)+'] '+t),336).forEach((l,j)=>{text(l,12+(j?12:0),y,'#f2c46b');y+=8});y+=3})}
   else if((G.time*2|0)%2)text('[E] TIẾP',300,190,'#f2c46b')}
 
 /* ---- interior: bake + entities ---- */
@@ -778,8 +786,9 @@ InteractionManager.prototype.update=function(G){_iu2.call(this,G);if(G.seq||G.q|
   if(m.office&&!G.dlg.on&&!G.pan&&!G.target&&Math.abs(p.x-16)<18&&p.y<=168)G.target={x:1}};
 InteractionManager.prototype.press=function(G){if(G.q)return Q.next();if(G.dlg.on)return _ip2.call(this,G);if(G.seq)return;
   const t=G.target;if(!t)return;
+  if(t.n&&t.n.talk==='investor'&&!CO.tip&&CO.r<ROUNDS.length){CO.tip=1;G.toast={s:'NHIỆM VỤ PHỤ XONG: +TIN TƯỞNG',t:0}}
   if(t.x)return leaveOffice();
-  if(t.i!==undefined){const k=offAt(G.map.key,t.i);if(k)return tryEnter(k);if(G.map.meet)return meetAt(G.map,t.i)}
+  if(t.i!==undefined){const k=offAt(G.map.key,t.i);if(k)return tryEnter(k);if((G.map.cat||[])[t.i])return miniStart(G.map,t.i)}
   if(t.n&&G.map.office)return talkNpc(t.n);
   _ip2.call(this,G)};
 
@@ -819,10 +828,29 @@ Object.assign(INVESTOR_OFFICES,{
    {topic:'TERM SHEET',q:'Term sheet có liquidation preference 2x và quyền phủ quyết rất rộng. Bạn nên...',c:[C('Đàm phán về 1x non-participating, giới hạn phạm vi phủ quyết',8,3,0),C('Ký ngay để kịp nhận vốn',-8,0,0),C('Từ chối mọi điều khoản bảo vệ nhà đầu tư',-2,1,0)]},
    {topic:'SỞ HỮU TRÍ TUỆ',q:'Mã nguồn do freelancer viết chưa có hợp đồng chuyển giao quyền. Xử lý ra sao?',c:[C('Ký hợp đồng chuyển giao quyền sở hữu trí tuệ ngay',8,3,0),C('Bỏ qua, họ đã nhận tiền rồi',-7,0,0),C('Viết lại toàn bộ sản phẩm',0,1,0)]}])});
 const offAt=(mk,i)=>Object.keys(INVESTOR_OFFICES).find(k=>INVESTOR_OFFICES[k].bi===i&&(INVESTOR_OFFICES[k].map||'financialDistrict')===mk);
+const C2=C,XQ={
+ mekongCapital:[{topic:'KHÁCH HÀNG',q:'Tỷ lệ khách rời bỏ mỗi tháng là bao nhiêu, bạn giảm nó thế nào?',c:[C2('Khoảng 3% mỗi tháng, có gói ưu đãi gia hạn và theo dõi theo nhóm khách',8,3,4),C2('Gần như không ai rời bỏ',-7,0,-3),C2('Chưa theo dõi, khách đến rồi đi',-5,0,-4)]},
+  {topic:'ĐỐI THỦ',q:'Nếu đối thủ lớn sao chép sản phẩm, lợi thế của bạn là gì?',c:[C2('Dữ liệu người dùng, thương hiệu và hợp đồng dài hạn với đối tác',8,3,3),C2('Chúng tôi làm nhanh hơn, vậy là đủ',-3,1,-2),C2('Đối thủ không đáng lo',-7,0,-4)]},
+  {topic:'ĐỘI NGŨ',q:'Đội ngũ quản lý hiện nay có đủ năng lực để mở rộng không?',c:[C2('Có CFO và CTO kinh nghiệm, đang tuyển giám đốc vận hành',8,3,3),C2('Hai sáng lập viên tự làm hết',-4,0,-3),C2('Sẽ thuê người khi có tiền',0,1,-2)]},
+  {topic:'KẾ HOẠCH 12 THÁNG',q:'Bạn cam kết mốc kết quả nào trong 12 tháng tới?',c:[C2('Doanh thu gấp đôi, giữ biên gộp, báo cáo quý cho quỹ',8,3,4),C2('Sẽ tăng trưởng thật nhanh',-4,0,-2),C2('Cam kết doanh thu gấp 10 lần',-8,0,5)]}],
+ angelCapital:[{topic:'SẢN PHẨM',q:'Sản phẩm khác gì so với các ứng dụng đã có trên thị trường?',c:[C2('Tập trung một nhu cầu, khảo sát 200 người dùng, tỷ lệ quay lại hằng tuần cao',8,3,4),C2('Giao diện đẹp hơn',-3,1,-2),C2('Chưa có đối thủ nào như chúng tôi',-7,0,-3)]},
+  {topic:'ĐỘI NGŨ',q:'Đội sáng lập gồm những ai, có cam kết làm toàn thời gian không?',c:[C2('Ba người bổ trợ kỹ năng, toàn thời gian, có vesting',8,3,3),C2('Mỗi người còn làm công việc khác',-6,0,-3),C2('Chỉ mình tôi, thuê ngoài phần còn lại',-2,1,-2)]},
+  {topic:'CHI PHÍ KHÁCH',q:'Chi phí để có một người dùng mới là bao nhiêu?',c:[C2('Khoảng 1 USD, chủ yếu truyền miệng, đã thử hai kênh trả phí',8,3,3),C2('Tôi chưa tính',-5,0,-3),C2('Không tốn gì vì người dùng tự đến',-4,0,-2)]},
+  {topic:'SỬ DỤNG VỐN',q:'Số vốn này kéo dài bao lâu, mốc nào mở vòng sau?',c:[C2('Đủ 18 tháng, mốc 100 nghìn người dùng và doanh thu đầu tiên',8,3,3),C2('Đủ 5 năm',-5,0,-2),C2('Chưa có kế hoạch cụ thể',-7,0,-4)]}],
+ tpgPrivateEquity:[{topic:'PHÁP LÝ',q:'Khi mở rộng khu vực, rủi ro pháp lý và dữ liệu cá nhân xử lý ra sao?',c:[C2('Thuê luật sư từng nước, tuân thủ quy định dữ liệu từ đầu',8,3,3),C2('Mở trước, sửa sau',-8,0,-2),C2('Đó là việc của quỹ',-5,0,-3)]},
+  {topic:'HÒA VỐN',q:'Khi nào công ty có lãi và dòng tiền tự do dương?',c:[C2('Hòa vốn dự kiến quý 6, theo dõi biên đóng góp từng thành phố',8,3,4),C2('Không cần lãi, cứ tăng trưởng',-6,0,-2),C2('Sẽ có lãi trong vài tháng tới',-4,0,-3)]},
+  {topic:'NHÂN SỰ CHỦ CHỐT',q:'Nếu một đồng sáng lập rời công ty, quỹ được bảo vệ thế nào?',c:[C2('Có vesting, điều khoản không cạnh tranh và kế hoạch kế nhiệm',8,3,3),C2('Điều đó sẽ không xảy ra',-5,0,-2),C2('Quỹ tự chịu rủi ro',-8,0,-3)]},
+  {topic:'BÁO CÁO',q:'Quỹ yêu cầu báo cáo hằng tháng và kiểm toán độc lập. Bạn đồng ý không?',c:[C2('Đồng ý, đã có quy trình kế toán và kiểm toán độc lập',8,3,3),C2('Chỉ báo cáo hằng năm',-4,1,-1),C2('Báo cáo khi chúng tôi thấy cần',-8,0,0)]}],
+ trieuHQ:[{topic:'THUẾ',q:'Kỳ kê khai thuế sắp đến hạn nhưng chưa đối chiếu hóa đơn. Bạn làm gì?',c:[C2('Đối chiếu và kê khai đúng hạn, nộp đủ thuế',8,3,0),C2('Khai thấp doanh thu cho đỡ thuế',-10,0,0),C2('Xin trễ hạn vài tháng',-2,1,0)]},
+  {topic:'DÒNG TIỀN',q:'Nhà cung cấp đòi thanh toán gấp trong khi khách chưa trả. Bạn ưu tiên gì?',c:[C2('Lập kế hoạch dòng tiền, thương lượng gia hạn và đòi công nợ trước',8,3,0),C2('Lấy quỹ lương tháng này trả trước',-6,0,0),C2('Bỏ qua nhà cung cấp',-5,0,0)]},
+  {topic:'TÀI SẢN',q:'Máy móc mua năm ngoái chưa được khấu hao. Xử lý thế nào?',c:[C2('Ghi nhận tài sản cố định và trích khấu hao theo quy định',8,3,0),C2('Ghi hết vào chi phí một lần',0,1,0),C2('Không ghi vào sổ',-7,0,0)]}],
+ lawFirm:[{topic:'HỢP ĐỒNG',q:'Hợp đồng với khách lớn thiếu điều khoản chấm dứt và bồi thường. Nên...',c:[C2('Bổ sung phụ lục, giới hạn trách nhiệm bồi thường',8,3,0),C2('Giữ nguyên vì khách là đối tác quan trọng',-5,0,0),C2('Hủy hợp đồng đang chạy',-3,1,0)]},
+  {topic:'BẢO MẬT DỮ LIỆU',q:'Ứng dụng thu thập dữ liệu người dùng nhưng chưa có chính sách bảo mật. Bạn...',c:[C2('Ban hành chính sách, xin đồng ý người dùng, mã hóa dữ liệu',8,3,0),C2('Để khi có khiếu nại',-8,0,0),C2('Xóa hết dữ liệu hiện có',-1,1,0)]},
+  {topic:'NHÃN HIỆU',q:'Tên thương hiệu chưa đăng ký bảo hộ. Bạn nên...',c:[C2('Nộp đơn đăng ký nhãn hiệu ngay',8,3,0),C2('Đợi có doanh thu lớn hơn',-2,1,0),C2('Đổi tên liên tục cho mới',-6,0,0)]}]};
 function beginRound(k){const s=qstate(k),c=INVESTOR_OFFICES[k];s.i=0;s.score=0;s.vm=0;
-  if(c.svc){s.qs=c.qs;s.trust=50;return}
-  s.nego={...c.nego,...ROUNDS[CO.r].funds[k]};s.trust=cl(s.nego.trust0+(CO.prep.fin?5:0)+(CO.prep.law?4:0)-3*CO.rep);s.vm=CO.prep.fin?3:0;
-  s.qs=[...c.qs.slice(0,2),...RQ[CO.r](),...c.qs.slice(2),DD]}
+  if(c.svc){s.qs=shf(c.qs.concat(XQ[k])).slice(0,4);s.trust=50;return}
+  s.nego={...c.nego,...ROUNDS[CO.r].funds[k]};s.trust=cl(s.nego.trust0+(CO.prep.fin?5:0)+(CO.prep.law?4:0)+(CO.tip?4:0)-3*CO.rep);s.vm=CO.prep.fin?3:0;
+  const p=shf(c.qs.concat(XQ[k]));s.qs=[...p.slice(0,2),...RQ[CO.r](),...p.slice(2,4),DD]}
 function tryEnter(k){const c=INVESTOR_OFFICES[k],s=QS[k],R0=ROUNDS[CO.r];
   if(s&&(s.r!==CO.r||s.ph==='done'&&!(s.tier||CO.prep[c.svc])))delete QS[k];   // vòng mới / thử lại sau khi thất bại
   if(!c.svc&&!(R0&&R0.funds[k])){const nx=ROUNDS.findIndex((x,i)=>i>CO.r&&x.funds[k]);
@@ -832,13 +860,13 @@ function svcDone(k){const s=qstate(k),c=INVESTOR_OFFICES[k],inv=G.map.inv,mx=mxs
   talk([[inv.name,c.ttl,[ok?c.ok:c.no,'ĐIỂM '+s.score+'/'+mx+(ok?' - ĐẠT. HỒ SƠ SẴN SÀNG.':' - CHƯA ĐẠT. HÃY LÀM LẠI (TỐN THÊM 1/2 THÁNG BURN).')],inv]],
     ()=>{s.ph='done';inv.busy=false;inv.set('IDLE');G.player.busy=false;G.toast={s:(ok?'ĐÃ CHUẨN BỊ: ':'CHƯA ĐẠT: ')+c.ttl,t:0};chkCash()})}
 function settle(k){const s=qstate(k);
-  if(s.tier){CO.cash=r1(CO.cash+s.amount);CO.val=r1(s.pre+s.amount);CO.own=r1(CO.own*(1-s.eq));CO.rev=r1(CO.rev*3);CO.burn=r1(CO.burn*2.2);CO.rep=Math.max(0,CO.rep-1);CO.prep={};CO.r++;
+  if(s.tier){CO.cash=r1(CO.cash+s.amount);CO.val=r1(s.pre+s.amount);CO.own=r1(CO.own*(1-s.eq));CO.rev=r1(CO.rev*3);CO.burn=r1(CO.burn*2.2);CO.rep=Math.max(0,CO.rep-1);CO.prep={};CO.tip=0;CO.r++;
     G.toast={s:CO.r<ROUNDS.length?'THÀNH CÔNG! MỞ KHÓA '+ROUNDS[CO.r].n:'HOÀN THÀNH 3 VÒNG GỌI VỐN',t:0};if(CO.r>=ROUNDS.length)win()}
   else{const l=r1(CO.burn*2);CO.cash=r1(CO.cash-l);CO.rep++;G.toast={s:'BỊ TỪ CHỐI: -'+l+'M TIỀN MẶT, UY TÍN GIẢM',t:0};chkCash()}}
 const chkCash=()=>{if(CO.cash<=0){CO.cash=0;lose()}};
 const lose=()=>talk([['HỘI ĐỒNG','HẾT TIỀN',['Tiền mặt đã cạn, công ty không thể trả lương tháng này.','Triệu niềm vui phải dừng hoạt động. Hãy rút kinh nghiệm và thử lại từ đầu.']]],()=>location.reload());
 const win=()=>talk([['HỘI ĐỒNG','CHẶNG MỚI',[`Bạn đã đi hết ba vòng: định giá ${CO.val} triệu USD, doanh thu ${CO.rev} triệu, sáng lập còn ${CO.own}% cổ phần.`,'Chặng tiếp theo là IPO hoặc M&A. Hãy tự do khám phá khu phố.']]]);
-const goal=()=>CO.r>=ROUNDS.length?'HOÀN THÀNH - TỰ DO KHÁM PHÁ':!CO.prep.fin?'MỤC TIÊU: RÀ SOÁT TÀI CHÍNH Ở TRIỆU NIỀM VUI':!CO.prep.law?'MỤC TIÊU: TƯ VẤN PHÁP LÝ Ở LEGACY LAW':'MỤC TIÊU: GỌI VỐN '+ROUNDS[CO.r].n+' - '+Object.keys(ROUNDS[CO.r].funds).map(k=>INVESTOR_OFFICES[k].name.split(' ')[0]).join('/');
+const goal=()=>CO.r>=ROUNDS.length?'HOÀN THÀNH - TỰ DO KHÁM PHÁ':!CO.prep.fin?'MỤC TIÊU: RÀ SOÁT TÀI CHÍNH Ở TRIỆU NIỀM VUI':!CO.prep.law?'MỤC TIÊU: TƯ VẤN PHÁP LÝ Ở LEGACY LAW':'MỤC TIÊU: GỌI VỐN '+ROUNDS[CO.r].n+' - '+Object.keys(ROUNDS[CO.r].funds).map(k=>INVESTOR_OFFICES[k].name.split(' ')[0]).join('/')+(CO.tip?'':' (PHỤ: HỎI NHÀ ĐẦU TƯ)');
 function drawHUD(){if(G.q||G.dlg.on||G.pan||G.fade>.05)return;const ru=CO.cash/CO.burn,st=ru<3?['NGUY CẤP','#d62a2a']:ru<6?['CẢNH BÁO','#f2c46b']:['ỔN ĐỊNH','#5cba4c'],
   L=['VÒNG '+(CO.r>2?'XONG':ROUNDS[CO.r].n),'TIỀN '+CO.cash+'M  RUNWAY '+Math.round(ru)+'T','ĐỊNH GIÁ '+CO.val+'M  SỞ HỮU '+CO.own+'%'];
   g.globalAlpha=.85;R(W-112,3,109,35,'#0e1730');g.globalAlpha=1;box(W-112,3,109,35,'#2a4a8a');L.forEach((t,i)=>text(t,W-109,7+i*8,i?'#fff':'#f2c46b'));text(st[0],W-109,31,st[1]);
@@ -851,7 +879,7 @@ TALKS.investor={title:'NHÀ ĐẦU TƯ CÁ NHÂN',topic:'tip',get pages(){return
 NPCS[7].talk='investor';
 // Mobile: joystick + nút E + nút chọn 1-4
 const $=i=>document.getElementById(i);let _cs='';
-function touchUI(){const q=G.q&&(G.q.mode==='ask'||G.q.mode==='nego')?(G.q.mode==='ask'?G.q.q.c.length:3):0;if(q+''===_cs)return;_cs=q+'';const ch=$('ch');ch.style.display=q?'flex':'none';ch.innerHTML='';
+function touchUI(){const m=G.q&&G.q.mode,q=m==='mq'?3:m==='ask'?G.q.q.c.length:m==='nego'?4:0;if(q+''===_cs)return;_cs=q+'';const ch=$('ch');ch.style.display=q?'flex':'none';ch.innerHTML='';
   for(let i=0;i<q;i++){const b=document.createElement('button');b.textContent=i+1;b.onpointerdown=e=>{e.preventDefault();Q.pick(i)};ch.appendChild(b)}}
 if(matchMedia('(pointer:coarse)').matches){$('tc').style.display='block';let pid=null;const js=$('js'),kn=$('kn'),K0=()=>Object.assign(G.keys,{left:0,right:0,up:0,down:0}),
   mv=e=>{const r=js.getBoundingClientRect(),m=r.width/2;let dx=e.clientX-r.left-m,dy=e.clientY-r.top-m;const d=Math.hypot(dx,dy);if(d>m){dx*=m/d;dy*=m/d}
@@ -861,8 +889,8 @@ if(matchMedia('(pointer:coarse)').matches){$('tc').style.display='block';let pid
 
 /* Scale lên màn hình, không làm mờ */
 const cv=document.getElementById('c'),ctx=cv.getContext('2d');
-function fit(){const r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1,w=Math.max(W,Math.round(r.width*d));cv.width=w;cv.height=Math.round(w*H/W)}
-function present(){ctx.imageSmoothingEnabled=false;ctx.drawImage(buf,0,0,cv.width,cv.height)}
+function fit(){const r=cv.getBoundingClientRect(),d=Math.min(window.devicePixelRatio||1,2),w=Math.max(W,Math.round(r.width*d));cv.width=w;cv.height=Math.round(w*H/W)}
+function present(){ctx.imageSmoothingEnabled=false;ctx.drawImage(buf,0,0,cv.width,cv.height);EO.forEach(a=>emo(...a))}
 fit();addEventListener('resize',fit);
 /* ================= V3: PHỐ TẠ HIỆN (scene 3) + BIỂN TÊN PHỐ + GIAO THÔNG CÓ NGƯỜI ================= */
 // ---- biển tên phố: MỘT thiết kế, MỘT tên duy nhất, đặt ở lối vào/giao lộ của mỗi phố
@@ -949,8 +977,6 @@ MAPS.taHien={key:'taHien',title:'PHỐ TẠ HIỆN',L:L3,B:RESTO.map(r=>({x:r.x,
     T('bike',60,'c',35,'#e26aa0'),T('bike',200,'c',31,'#22262e'),T('car',300,'c',27,'#8a2b2b'),T('deliv',30,'d',42,'#1fa64a'),T('bike',170,'d',30,'#e0a020'),T('deliv',280,'d',40,'#e0a020')],
   fx:t=>{RESTO.forEach((r,i)=>{g.globalAlpha=.1+.04*Math.sin(t*2+i);disc(r.x+(r.w>>1),BASE-4,18,'#ffd98a')});g.globalAlpha=.5;
     for(let i=0;i<3;i++)px(312+i*8+Math.sin(t*2+i)*2,158-((t*8+i*5)%14),'#e8e8f0');g.globalAlpha=1}};
-function meetAt(m,i){G.dlg.open(G,{name:m.names[i],title:'BÀN GẶP ĐỐI TÁC',npc:null,topic:'meeting:'+RESTO[i].id,
-  pages:['Kính chào quý khách đến '+m.names[i]+'. Chúng tôi đã chuẩn bị bàn riêng cho buổi gặp đối tác của quý khách.','Không gian bên trong sẽ mở ở phiên bản sau. Quý khách có thể đặt bàn trước.']})}
 function initTa(){const m=MAPS.taHien,c=new CollisionManager(),m2=MAPS.trieuNiemVuiDistrict;c.b={x0:2,x1:360,y0:160,y1:201};
   LAMPS3.forEach(([x,b])=>x<340&&c.add(x-2,b-5,5,5));TB.forEach(([x,y])=>c.add(x-3,y-5,19,6));m.col=c;
   m.npcs=NP3.map(n=>new Character({...n,col:c,ai:new Wander(n.pts||[],n.seed,n.phone),speed:n.spd||CFG.npcSpeed}));
@@ -959,11 +985,63 @@ function initTa(){const m=MAPS.taHien,c=new CollisionManager(),m2=MAPS.trieuNiem
   on(m1.L.town,()=>{for(let i=0;i<4;i++)for(let y=181;y<H;y++)R(6+i*10-(y-181)*.35,y,5,1,'#e8e6dc')});}
 
 
+/* ===== MINI-THỬ THÁCH: MỌI NHÀ / QUÁN ĐỀU CHƠI ĐƯỢC (3 câu, đúng >=2 nhận thưởng mỗi vòng) ===== */
+const EO=[],EC={},MD={},EM={fine:'🍷',cafe:'🍜',shop:'🛍️',home:'🏠',tech:'💻',audit:'📊'},
+TT={fine:'BÀN ĐỐI TÁC',cafe:'QUÁN ĂN',shop:'CỬA HÀNG',home:'CƯ DÂN',tech:'ĐỐI TÁC CÔNG NGHỆ',audit:'KIỂM TOÁN'},
+MQ={ // [câu hỏi, ĐÁP ÁN ĐÚNG, sai, sai] - đáp án tự xáo trộn
+ fine:[['Gặp nhà đầu tư ở nhà hàng, bạn mở lời thế nào?','Nêu ngắn gọn vấn đề, thị trường, số liệu','Khoe bạn giỏi nhất thị trường','Hỏi ngay họ định đầu tư bao nhiêu'],
+  ['Bạn mời đối tác ăn, hóa đơn xử lý sao?','Bạn trả và giữ hóa đơn hợp lệ','Để nhà đầu tư trả','Trả tiền mặt, không lấy hóa đơn'],
+  ['Đối tác hỏi số liệu bạn chưa chắc. Bạn nên?','Hẹn kiểm tra rồi gửi lại chính xác','Đoán một con số nghe hợp lý','Chuyển sang chủ đề khác']],
+ cafe:[['Quán nhập hàng trả chậm 30 ngày. Đó là khoản gì?','Công nợ phải trả','Doanh thu','Lợi nhuận'],
+  ['Quán bán 100 tô, giá vốn 60%. Biên lãi gộp?','40%','60%','100%'],
+  ['Khách trả tiền mặt, quán cần làm gì cho đúng thuế?','Xuất hóa đơn và ghi sổ đầy đủ','Bỏ qua vì tiền nhỏ','Chỉ ghi khi khách đòi']],
+ shop:[['Hàng tồn kho quá nhiều ảnh hưởng gì?','Chôn vốn, giảm dòng tiền','Tăng tiền mặt','Không ảnh hưởng gì'],
+  ['Khi nào nên khuyến mãi?','Giá bán vẫn cao hơn giá vốn','Bán thấp hơn giá vốn cho nhanh','Không cần tính giá vốn'],
+  ['Hộ kinh doanh lưu gì để chứng minh chi phí?','Hóa đơn, chứng từ hợp lệ','Lời hứa miệng với nhà cung cấp','Không cần lưu gì']],
+ home:[['Cư dân hỏi ứng dụng mang lại gì. Nói điều gì trước?','Lợi ích rõ ràng cho họ','Công nghệ bên trong phức tạp ra sao','Giá cổ phần công ty'],
+  ['Nhiều cư dân bỏ app sau 1 tuần. Xem chỉ số nào?','Tỷ lệ giữ chân người dùng','Số lượt tải về','Màu của logo'],
+  ['Cách tốt nhất để lấy ý kiến khách hàng?','Hỏi ngắn, nghe thật, sửa nhanh','Chỉ nghe lời khen','Bỏ qua phản hồi tiêu cực']],
+ tech:[['Ký hợp đồng với đối tác công nghệ, rà soát gì?','Điều khoản thanh toán và bảo mật dữ liệu','Chỉ xem logo đối tác','Chỉ xem giá thấp nhất'],
+  ['Mã nguồn do freelancer viết. Cần gì để sở hữu?','Hợp đồng chuyển giao quyền','Lời hứa miệng','Không cần gì'],
+  ['Phí đám mây trả theo tháng. Ghi nhận thế nào?','Chi phí của kỳ sử dụng','Doanh thu','Tài sản cố định']],
+ audit:[['Kiểm toán độc lập giúp công ty điều gì?','Tăng độ tin cậy của báo cáo tài chính','Tăng doanh thu ngay lập tức','Được miễn nộp thuế'],
+  ['Kiểm toán viên yêu cầu chứng từ. Bạn nên?','Cung cấp đầy đủ, trung thực','Chỉ đưa phần đẹp','Chậm trễ để câu giờ'],
+  ['Lãi kế toán dương nhưng tiền mặt âm. Vì sao?','Khách chưa trả tiền hoặc tồn kho tăng','Sổ sách luôn sai','Không thể xảy ra']]};
+function emo(e,x,y,s,a=1,sc=1){const k=cv.width/W,z=Math.round(s*k),id=e+z;let c=EC[id];
+  if(!c){c=EC[id]=document.createElement('canvas');c.width=c.height=Math.ceil(z*1.5);const q=c.getContext('2d');q.font=z+'px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';q.textAlign='center';q.textBaseline='middle';q.fillText(e,c.width/2,c.height/2)}
+  ctx.globalAlpha=a;ctx.drawImage(c,x*k-c.width*sc/2,y*k-c.height*sc/2,c.width*sc,c.height*sc);ctx.globalAlpha=1}
+function initMini(){const add=(m,sh,nm,ct)=>{m.B=m.B.concat(sh.map(s=>({x:s[0],w:s[2],top:s[1]})));m.names=m.names.concat(nm);m.cat=m.cat.concat(ct)},
+  m1=MAPS.financialDistrict,m2=MAPS.trieuNiemVuiDistrict,m3=MAPS.taHien;
+  m1.cat=['','','','','audit'];add(m1,SHOPS,['TIỆM BÁNH','QUÁN PHỞ','TẠP HÓA','TIỆM SÁCH'],Array(4).fill('shop'));
+  m2.cat=['home','tech','','tech','home'];add(m2,SHOPS2,['TIỆM HOA','TIỆM TRÀ','SIÊU THỊ MINI'],Array(3).fill('shop'));
+  m3.B=SL.map(s=>({x:s[0],w:s[1],top:s[7]}));m3.names=SL.map(s=>s[3]);m3.cat=SL.map(s=>s[2]>1?'fine':'cafe')}
+function markers(){const m=G.map,t=G.time;if(G.pan||G.q||!m.cat)return;   // biểu tượng nhấp nhô trên mái mỗi nhà chơi được
+  m.cat.forEach((c,i)=>{if(!c)return;const b=m.B[i],d=MD[m.key+i]===CO.r;EO.push([d?'✅':EM[c],b.x+(b.w>>1),Math.max(9,b.top-8)+Math.sin(t*3+i)*2,d?8:10,1,1+.1*Math.sin(t*5+i)])})}
+function miniStart(m,i){const c=m.cat[i];G.q={mode:'mq',h:{k:m.key+i,n:m.names[i],c},qs:shf(MQ[c]).map(([q,...a])=>({q,c:shf(a.map((t,j)=>({t,ok:!j})))})),i:0,ok:0,rx:''};
+  G.player.busy=true;G.player.set('THINKING')}
+function mPick(n){const q=G.q,s=q.qs[q.i],ch=s.c[n];if(!ch)return;q.good=ch.ok;if(ch.ok)q.ok++;
+  q.rx=ch.ok?'ĐÚNG RỒI!':'CHƯA ĐÚNG. ĐÁP ÁN: '+s.c.find(x=>x.ok).t;q.mode='mr'}
+function mNext(){const q=G.q,n=q.qs.length;if(q.end)return mDone();if(q.i<n-1){q.i++;q.mode='mq';return}
+  q.end=1;q.rx='ĐÚNG '+q.ok+'/'+n+(q.ok>=2?MD[q.h.k]===CO.r?'. ĐẠT! (ĐÃ NHẬN THƯỞNG VÒNG NÀY)':'. ĐẠT! NHẬN THƯỞNG.':'. CHƯA ĐẠT, THỬ LẠI NHÉ.')}
+function mDone(){const q=G.q,h=q.h,p=G.player,ok=q.ok>=2;G.q=null;p.busy=false;p.lock=0;p.set('IDLE');
+  if(ok&&MD[h.k]!==CO.r){MD[h.k]=CO.r;CO.cash=r1(CO.cash+.1);if(h.c==='fine')CO.tip=1;G.toast={s:'+0.1 TRIỆU USD'+(h.c==='fine'?' VÀ NIỀM TIN NHÀ ĐẦU TƯ':''),t:0}}
+  if(ok)p.emote('HAPPY',1.5)}
+function drawM(){const q=G.q,h=q.h,n=q.qs.length,ask=q.mode==='mq',t=G.time,up=x=>x.toUpperCase().normalize('NFC'),s=q.qs[q.i],
+  nm=h.n,tt=q.end?'KẾT QUẢ':TT[h.c]+' '+(q.i+1)+'/'+n,tb=tw(nm)+tw(tt)+16;
+  R(5,100,350,100,'#e9f0ff');R(6,101,348,98,'#0e1730');R(6,101,348,1,'#2a4a8a');
+  R(11,91,tb+2,11,'#e9f0ff');R(12,92,tb,10,'#2a4a8a');text(nm,16,95,'#fff');text(tt,16+tw(nm)+8,95,'#f2c46b');
+  EO.push([EM[h.c],342,109+Math.sin(t*4)*2,13,1,1+.1*Math.sin(t*6)]);for(let j=0;j<q.ok;j++)EO.push(['⭐',316-j*13,109,9,1,1+.15*Math.sin(t*6+j)]);
+  let y=118;wrap(up(ask?s.q:q.rx),336).forEach(l=>{text(l,12,y,ask||q.end?'#fff':q.good?'#7fe08a':'#ff8a70');y+=9});
+  if(ask){y=Math.max(y+4,136);s.c.forEach((o,i)=>{wrap(up('['+(i+1)+'] '+o.t),336).forEach((l,j)=>{text(l,12+(j?12:0),y,'#f2c46b');y+=8});y+=3})}
+  else{EO.push([q.end?(q.ok>=2?'🏆':'💪'):(q.good?'🎉':'🤔'),330,160+Math.sin(t*5)*3,20,1,1+.1*Math.sin(t*7)]);if((t*2|0)%2)text('[E] TIẾP',300,190,'#f2c46b')}}
+const _dq=drawQ,_qp=Q.pick,_qn=Q.next;
+drawQ=function(){const q=G.q;q&&q.mode[0]==='m'?drawM():_dq()};
+Q.pick=n=>G.q&&G.q.mode==='mq'?mPick(n):_qp(n);
+Q.next=()=>G.q&&G.q.mode==='mr'?mNext():_qn();
+
 /* ===== MÀN HÌNH MỞ ĐẦU: THƯƠNG VỤ TỶ ĐÔ ===== */
-const MOB=matchMedia('(pointer:coarse)').matches,LI=mk(),IL=[['MỤC TIÊU: GỌI VỐN 3 VÒNG - SEED, SERIES A, SERIES B','#f2c46b'],
- ['1 RÀ SOÁT TÀI CHÍNH Ở TRIỆU NIỀM VUI, PHÁP LÝ Ở LEGACY'],['2 VÀO QUỸ ĐẦU TƯ, GẶP LỄ TÂN RỒI TRÌNH BÀY VỚI NHÀ ĐẦU TƯ'],
- ['3 CHỌN CÂU TRẢ LỜI (PHÍM 1-4 HOẶC NÚT SỐ) VÀ ĐÀM PHÁN ĐỊNH GIÁ'],['4 THEO DÕI TIỀN VÀ RUNWAY, ĐỪNG ĐỂ CẠN VỐN'],['5 PHỐ TẠ HIỆN: GẶP ĐỐI TÁC Ở NHÀ HÀNG CAO CẤP'],
- [MOB?'ĐIỀU KHIỂN: CẦN GẠT TRÁI ĐỂ ĐI, NÚT E ĐỂ TƯƠNG TÁC':'ĐIỀU KHIỂN: WASD HOẶC MŨI TÊN ĐỂ ĐI, PHÍM E ĐỂ TƯƠNG TÁC','#9fb4d8']];
+const MOB=matchMedia('(pointer:coarse)').matches,LI=mk(),IL=[['🎯','GỌI VỐN 3 VÒNG: SEED, A, B','#f2c46b'],['🔍','RÀ SOÁT TÀI CHÍNH, PHÁP LÝ TRƯỚC'],['🤝','GẶP QUỸ, CHỌN ĐÁP ÁN, ĐÀM PHÁN'],['🏠','MỌI NHÀ, QUÁN: BẤM E ĐỂ CHƠI'],
+ MOB?['🕹️','CẦN GẠT ĐI, NÚT E TƯƠNG TÁC','#9fb4d8']:['⌨️','WASD ĐI, PHÍM E TƯƠNG TÁC','#9fb4d8']];
 on(LI,()=>{g.drawImage(L3.sky,0,0);drawCity(3);g.globalAlpha=.5;R(0,0,W,H,'#0a1030');g.globalAlpha=1;R(0,BASE,W,H-BASE,'#0a1030');R(0,BASE,W,1,'#2a4a8a')});
 function drawIntro(t){g.drawImage(LI,0,0);const b=Math.round(Math.sin(t*2)*2);
   for(let i=0;i<16;i++)if((t*2+i)%3<1.5)px((i*53)%W,(i*29)%70+4,'#fff');
@@ -971,15 +1049,19 @@ function drawIntro(t){g.drawImage(LI,0,0);const b=Math.round(Math.sin(t*2)*2);
   textC('THƯƠNG VỤ',181,25+b,'#1f3a8a',3);textC('THƯƠNG VỤ',180,24+b,'#ffffff',3);
   textC('TỶ ĐÔ',182,50+b,'#7a2a10',5);textC('TỶ ĐÔ',180,48+b,'#ffd24a',5);textC('TỶ ĐÔ',180,48+b,'#ffd24a',5);
   textC('GỌI VỐN CÙNG TRIỆU NIỀM VUI',180,79,'#9fb4d8');
-  R(14,88,332,102,'#e9f0ff');R(15,89,330,100,'#0e1730');R(15,89,330,1,'#2a4a8a');textC('HƯỚNG DẪN',180,93,'#ffffff');R(120,100,120,1,'#2a4a8a');
-  IL.forEach(([s,c],i)=>textC(s,180,105+i*10,c||'#ffffff'));
-  if((t*2|0)%2)textC(MOB?'CHẠM MÀN HÌNH ĐỂ BẮT ĐẦU':'NHẤN E, ENTER HOẶC CLICK ĐỂ BẮT ĐẦU',180,180,'#f2c46b')}
+  R(24,88,312,86,'#e9f0ff');R(25,89,310,84,'#0e1730');R(25,89,310,1,'#2a4a8a');
+  IL.forEach(([e,x,c],i)=>{const a=Math.max(0,Math.min(1,(t-.2-i*.15)*3)),y=98+i*15,o=Math.round((1-a)*(i%2?60:-60));g.globalAlpha=a;text(x,54+o,y+1,c||'#fff');g.globalAlpha=1;
+    EO.push([e,38+o,y+3+Math.sin(t*4+i)*1.5,10,a,1+.1*Math.sin(t*5+i)])});
+  [['💰',62,26],['📈',98,54],['🚀',66,64],['🏢',298,26],['💡',262,54],['🤝',294,64]].forEach(([e,x,y],i)=>EO.push([e,x+Math.sin(t*1.2+i)*4,y+Math.sin(t*1.7+i*2)*4,12,1,1+.1*Math.sin(t*3+i)]));
+  const s=MOB?'CHẠM MÀN HÌNH ĐỂ BẮT ĐẦU':'NHẤN E, ENTER HOẶC CLICK ĐỂ BẮT ĐẦU',h=tw(s)/2+12;
+  if((t*2|0)%2){textC(s,180,182,'#f2c46b');EO.push(['▶️',180-h,185+Math.sin(t*8),9,1,1],['◀️',180+h,185+Math.sin(t*8),9,1,1])}
+  if(innerHeight>innerWidth){const r='XOAY NGANG MÀN HÌNH ĐỂ CHƠI DỄ HƠN';textC(r,180,194,'#9fb4d8');EO.push(['🔄',180-tw(r)/2-10,197,8,1,1+.2*Math.sin(t*4)])}}
 const _r3=Game.prototype.render,_u3=Game.prototype.update,_p3=InteractionManager.prototype.press;
-Game.prototype.render=function(){this.intro?drawIntro(this.time):_r3.call(this)};
+Game.prototype.render=function(){EO.length=0;this.intro?drawIntro(this.time):(_r3.call(this),markers())};
 Game.prototype.update=function(dt){if(!this.intro)_u3.call(this,dt)};
 InteractionManager.prototype.press=function(G){if(G.intro){G.intro=0;G.time=0;G.keys={};return}_p3.call(this,G)};
 cv.addEventListener('pointerdown',()=>{if(G.intro)G.inter.press(G)});
-G=new Game();G.intro=1;initWorld();initTa();initOffices();G.fade=0;requestAnimationFrame(t=>G.frame(t));
+G=new Game();G.intro=1;initWorld();initTa();initOffices();initMini();G.fade=0;requestAnimationFrame(t=>G.frame(t));
 </script>
 </body>
 </html>
