@@ -367,6 +367,47 @@ const CLOUDS=[[42,20,1,2.2],[108,10,1.1,1.6],[212,14,1,2.6],[258,30,1.15,1.9],[3
 /* ================= LAYERS ================= */
 const mk=(w=W,h=H)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c};
 function on(c,fn,ox=0,oy=0){const o=g;g=c.getContext('2d');g.imageSmoothingEnabled=false;g.save();g.translate(-ox,-oy);try{fn()}finally{g.restore();g=o}}
+/* ================= 2.5D PIXEL FX (layered depth, angled faces, light & shadow, VN atmosphere) ================= */
+const al=(a,f)=>{const o=g.globalAlpha;g.globalAlpha=a;f();g.globalAlpha=o};
+function extrude(x,top,w,bot,wall,d,roof){for(let i=1;i<=d;i++){R(x+i,top-i,w,1,sh(roof,1-.06*i));R(x+w-1+i,top-i,1,bot-top+i,sh(wall,.66-.03*i));if(i<d&&i%2)for(let y=top+4;y<bot-4;y+=6)px(x+w-1+i,y,sh(wall,.5))}R(x+w-1+d,top-d,1,bot-top+d,sh(wall,.5))}
+function facade(x,top,w,h){g.save();g.beginPath();g.rect(x,top,w,h);g.clip();
+  for(let i=0;i<h;i+=3)al(.2*i/h,()=>R(x,top+i,w,3,'#0a1230'));
+  al(.07,()=>{for(let k=-h/2;k<w;k+=15)for(let j=0;j<h;j+=2)R(x+k+((h-j)>>1),top+j,4,2,'#ffffff')});
+  al(.3,()=>R(x,top+h-4,w,4,'#0a1230'));g.restore()}
+const _dB=drawBuilding;drawBuilding=function(b,i){_dB(b,i);const{x,w,top}=b;extrude(x,top,w,BASE,b.wall,4,sh(b.wall,1.3));facade(x,top,w,BASE-top);
+  if(b.green)for(let k=x+3;k<x+w-2;k+=6){px(k+1,top-3,'#f06aa0');px(k+3,top-2,'#ffa6c8')}};
+const _dH=drawShop;drawShop=function(s){_dH(s);const[x,top,w,wall,roof]=s;extrude(x,top,w,BASE,wall,3,sh(roof,1.25));facade(x,top,w,BASE-top)};
+if(typeof drawApartment==='function'){const _dA=drawApartment;drawApartment=function(b,i){_dA(b,i);if(typeof b.wall==='string'&&b.top!=null){extrude(b.x,b.top,b.w,BASE,b.wall,3,sh(b.wall,1.3));facade(b.x,b.top,b.w,BASE-b.top)}}}
+const _dC=drawCity;drawCity=function(sd){_dC(sd);for(let y=40;y<BASE;y+=4)al(.28*(y-40)/(BASE-40),()=>R(0,y,W,4,'#dcecf8'))};
+const _dS=drawSidewalk;drawSidewalk=function(){_dS();
+  al(.2,()=>{for(let x=-14;x<W;x+=14)for(let y=SW;y<CURB;y++){px(x+(y-SW)*2,y,'#8a6a58');px(x+28-(y-SW)*2,y,'#8a6a58')}});
+  al(.24,()=>R(0,SW,W,3,'#2a2440'));al(.12,()=>R(0,SW+3,W,3,'#2a2440'))};
+const _dT=drawStreet;drawStreet=function(){_dT();
+  for(let y=ROAD;y<H;y+=2)al(.14*(y-ROAD)/(H-ROAD),()=>R(0,y,W,2,'#0c1020'));al(.3,()=>R(0,ROAD+2,W,3,'#0c1020'));
+  al(.07,()=>[[40,186,30],[150,196,40],[250,184,26]].forEach(([x,y,r])=>{for(let j=-1;j<=1;j++)R(x-r*(1-.3*j*j)/2,y+j,r*(1-.3*j*j),1,'#cfe4ff')}))};
+const _dTr=drawTree;drawTree=function(x,b,s,sd){al(.26,()=>{const l=Math.round(18*s);R(x-l/2+3,b-1,l,1,'#0a1230');R(x-l/2+5,b,l-4,1,'#0a1230');R(x-l/2+5,b-2,l-4,1,'#0a1230')});_dTr(x,b,s,sd)};
+const _dV=drawVehicle;drawVehicle=function(x,y,t,c){const bk=t==='bike';
+  al(.3,()=>{R(x+1,y-1,bk?15:35,2,'#0a1230');R(x+4,y+1,bk?9:28,1,'#0a1230')});_dV(x,y,t,c);
+  if(bk){px(x+6,y-8,'#ffffff');al(.4,()=>R(x+14,y-10,3,2,'#ffe89a'))}
+  else{R(x+9,y-14,17,1,sh(c,1.55));R(x+10,y-12,2,2,'#eaf8ff');R(x+19,y-12,2,2,'#eaf8ff');R(x+8,y-13,1,5,sh(c,.7));R(x+27,y-13,1,5,sh(c,.7));R(x+1,y-6,34,1,sh(c,1.15));R(x+2,y-3,32,1,'#0a1230');al(.4,()=>R(x-3,y-7,3,2,'#ffe89a'))}};
+const LANT=[];
+function lantern(x,y,i){const c=i%3?'#d82e2e':'#f2b43c';R(x,y,1,2,'#3a2a22');R(x-1,y+2,3,1,'#f2d070');R(x-2,y+3,5,4,c);R(x-2,y+3,2,4,sh(c,1.35));R(x+2,y+3,1,4,sh(c,.7));R(x-1,y+7,3,1,'#f2d070');px(x,y+8,'#f2b43c');px(x,y+9,'#f2b43c')}
+function lanterns(x1,y1,x2,y2,sag,n){for(let i=0;i<n;i++){const t=(i+.5)/n,x=Math.round(x1+(x2-x1)*t),y=Math.round(y1+(y2-y1)*t+sag*4*t*(1-t));lantern(x,y,i);LANT.push([x,y+5])}}
+const _dW=drawWires;drawWires=function(){_dW();lanterns(25,90,97,90,5,5);lanterns(97,90,279,90,12,12);lanterns(279,90,326,90,4,4)};
+const _pc=paintChar;paintChar=function(){const c=_pc.apply(this,arguments);try{const x=c.getContext('2d'),w=c.width,h=c.height,d=x.getImageData(0,0,w,h),a=d.data,o=new Uint8ClampedArray(a);
+  for(let y=0;y<h;y++)for(let i=0;i<w;i++){const k=(y*w+i)*4;if(!o[k+3])continue;const lit=(i<2||!o[k-4+3]||!o[k-8+3])||(y<2||!o[k-w*4+3]||!o[k-w*8+3]),f=lit?1.2:1-.18*y/h;a[k]=Math.min(255,o[k]*f);a[k+1]=Math.min(255,o[k+1]*f);a[k+2]=Math.min(255,o[k+2]*f*(lit?.96:1.05))}
+  x.putImageData(d,0,0)}catch(e){}return c};
+function charShadow(x,y,w=7){const k=Math.max(-1,Math.min(1,(DAY.h-12)/5)),n=lighting().night,o=Math.round(k*4),l=w+Math.abs(k)*4;
+  al(n?.1:.3,()=>{R(x-l/2+o,y-1,l,1,'#0a1230');R(x-l/2+o+1,y,l-2,1,'#0a1230');R(x-l/2+o+2,y-2,l-4,1,'#0a1230')})}
+const GL=mk(32,32),VG=mk(),SUN=mk();
+on(GL,()=>{const r=g.createRadialGradient(16,16,0,16,16,16);r.addColorStop(0,'rgba(255,190,90,.9)');r.addColorStop(1,'rgba(255,120,40,0)');g.fillStyle=r;g.fillRect(0,0,32,32)});
+on(VG,()=>{const r=g.createRadialGradient(W/2,H/2,H*.42,W/2,H/2,W*.62);r.addColorStop(0,'rgba(8,12,40,0)');r.addColorStop(1,'rgba(8,12,40,.4)');g.fillStyle=r;g.fillRect(0,0,W,H)});
+on(SUN,()=>{const r=g.createLinearGradient(0,0,W*.8,H);r.addColorStop(0,'rgba(255,226,150,.6)');r.addColorStop(.5,'rgba(255,226,150,.1)');r.addColorStop(1,'rgba(255,226,150,0)');g.fillStyle=r;g.fillRect(0,0,W,H)});
+function fin25(LIT,t,main){const n=Math.min(1,LIT.ta*2.4);
+  if(main&&n>.3){g.globalCompositeOperation='lighter';LANT.forEach(([x,y],i)=>{g.globalAlpha=n*(.5+.12*Math.sin(t*3+i));g.drawImage(GL,x-8,y-8,16,16)});g.globalCompositeOperation='source-over';g.globalAlpha=1}
+  g.drawImage(VG,0,0);
+  if(!LIT.night&&LIT.ta<.12){g.globalCompositeOperation='lighter';g.globalAlpha=.2;g.drawImage(SUN,0,0);g.globalCompositeOperation='source-over';g.globalAlpha=1}}
+
 const L={sky:mk(),town:mk(),wire:mk(),fg:mk()};
 on(L.sky,drawSky);
 on(L.town,()=>{drawCity();SHOPS.forEach(drawShop);B.forEach(drawBuilding);drawSidewalk();drawStreet();drawPlaza();drawFlag(27,100);drawFlag(268,100);drawLandmark81(345,155);drawTurtleTower(340,155)});
@@ -739,7 +780,7 @@ class Game{
     ents.sort((a,b)=>a.y-b.y);ents.forEach(e=>e.d());
     g.drawImage(L.wire,0,0);swayBlit(L.fg,0,0,t,1.2,0,1e9);
     g.globalAlpha=.75;PART.forEach(q=>px(q.x,q.y,q.leaf?'#72b86c':'#fff8d0'));g.globalAlpha=1;
-    if(LIT.ta>.01){g.globalAlpha=LIT.ta;g.fillStyle=LIT.tint;g.fillRect(0,0,W,H);g.globalAlpha=1;}
+    if(LIT.ta>.01){g.globalAlpha=LIT.ta;g.fillStyle=LIT.tint;g.fillRect(0,0,W,H);g.globalAlpha=1;}fin25(LIT,t,1);
     const tg=this.target;if(tg&&!this.dlg.on)tg.n?prompt(tg.n.x,tg.n.y-46):prompt(p.x,p.y-46);
     this.dlg.draw(this);
     if(t<8&&!this.dlg.on){text(CFG.hint,7,H-30,'#0e1730');text(CFG.hint,6,H-31,'#ffffff')}
@@ -859,7 +900,7 @@ Object.assign(Game.prototype,{
     ents.sort((a,b)=>a.y-b.y);ents.forEach(e=>e.d());
     g.drawImage(m.L.wire,0,0);swayBlit(m.L.fg,0,0,t,1.2,0,1e9);m.fx(t);
     g.globalAlpha=.75;m.part.forEach(q=>px(q.x,q.y,q.leaf?'#72b86c':'#fff8d0'));g.globalAlpha=1;
-    if(LIT.ta>.01){g.globalAlpha=LIT.ta;g.fillStyle=LIT.tint;g.fillRect(0,0,W,H);g.globalAlpha=1;}
+    if(LIT.ta>.01){g.globalAlpha=LIT.ta;g.fillStyle=LIT.tint;g.fillRect(0,0,W,H);g.globalAlpha=1;}fin25(LIT,t,m.L&&m.L.town===L.town);
     g.restore()},
   render(){const t=this.time,p=this.player,a=this.pan;
     if(a){const e=Math.min(1,a.t/.6),off=Math.round(e*e*(3-2*e)*W);
@@ -1134,7 +1175,7 @@ const Q={
     AU.sfx('select');
     if(q.mode==='ask'){let ch=q.q.c[n];if(!ch)return;const bad=ch.need&&!(CO.prep.fin&&CO.prep.law);if(bad)ch={...ch,tr:-10,sc:0,v:-6};s.trust=cl(s.trust+ch.tr);s.score+=ch.sc;s.vm+=ch.v;s.i++;
       q.rx=bad?'DATA ROOM KHÔNG KHỚP VỚI ĐIỀU BẠN NÓI.':(q.q.e?(ch.sc>=3?'ĐÚNG. ':'CHƯA ĐÚNG. ')+q.q.e+' (TIN TƯỞNG '+(ch.tr>0?'+':'')+ch.tr+', ĐỊNH GIÁ '+(ch.v>0?'+':'')+ch.v+'%)':c.react[ch.tr>=5?2:ch.tr>=0?1:0]);q.mode='react';inv.set(ch.tr>=0?'INTERACT':'THINKING');G.player.set('INTERACT');AU.sfx(ch.tr>=0?'good':'bad');
-      if(ch.sc>=3)CO.bk.perfect=(CO.bk.perfect||0)+1;Pts.pop(ch.tr>=0?'+TIN TƯỞNG':'',ch.tr>=0?'good':'bad');}
+      if(ch.sc>=3)CO.bk.perfect=(CO.bk.perfect||0)+1;{const fx=ch.sc>=3?q.q.fg:q.q.fb;if(fx)applyFx(fx,ch.sc>=3)}Pts.pop(ch.tr>=0?'+TIN TƯỞNG':'',ch.tr>=0?'good':'bad');}
     else{if(n>3)return;const nc=s.nego,r=s.nr,w=Math.random;
       if(!n){q.rx=NG[0];s.end=1}
       else{const pl=s.trust+s.score/mxs(c,q.k)*25+w()*20-10,iv=nc.ct+r*6+(n===3?8:n===1?3:-2)+w()*20-10,ok=pl>iv;
@@ -1369,7 +1410,7 @@ function beginRound(k){const s=qstate(k),c=INVESTOR_OFFICES[k];s.i=0;s.score=0;s
   CO.venueTrust=0;CO.venueUsed=null;
   s.vm=CO.prep.fin?3:0;
   const bank=qBank(ST),round=['seed','a','b'][CO.r]||'a';
-  const p=pickQ(bank[round].concat(bank[['a','b','a'][CO.r]||'a']),4,'');
+  const p=pickLv(bank,round);
   s.qs=[...p,pickQ(ddQ(ST),1,'dd')[0]]}
 function tryEnter(k){const c=INVESTOR_OFFICES[k],s=QS[k],R0=ROUNDS[CO.r];
   if(c.loan||c.venue)return enterOffice(k);
@@ -2171,6 +2212,42 @@ function mqPool(S){const{n,p,cu,pb,rm,m,r}=_n(S),rn=Math.round(S.ask/S.burn),rc=
  [`Khách lớn nhất của ${n} đòi giảm giá 25% và dọa bỏ đi. Cách xử lý hợp lý?`,'Đổi giảm giá lấy hợp đồng dài hạn','Giảm ngay, chấp nhận lỗ','Mặc kệ họ rời đi'],
  [`Đối thủ ngành ${p} giảm giá 30%. ${n} nên làm gì trước?`,'Theo dõi churn, giữ nhóm khách giá trị cao','Giảm giá theo ngay lập tức','Phớt lờ, không theo dõi'],
  [`Rủi ro ${r[0]} xảy ra với ${n}. Việc đầu tiên?`,'Báo khách và quỹ, khắc phục có kế hoạch','Giấu để giữ uy tín','Đổ lỗi cho nhà cung cấp']]}
+/* ================= CÂU HỎI: QUẢN TRỊ / NHÂN SỰ / M&A (Dễ → Vừa → Khó, tác động trực tiếp tới thương vụ) ================= */
+const K=(cat,lv,topic,q,e,ok,a,b,c,fg,fb)=>({cat,lv,topic,q,e,fg,fb,c:[C(ok,4+2*lv,3,1+lv),C(a,-3,1,-2),C(b,-5,0,-3),C(c,-7,0,-4)]});
+function mgmtQ(S){const n=S.name,p=S.prod,T=S.team,bn=S.burn,rv=S.rev,vl=S.val,ak=S.ask,k3=Math.max(2,Math.round(T/4));return[
+ K('mgmt',1,'QUẢN TRỊ: MỤC TIÊU & HỌP TUẦN',`${n} có ${T} người. Cách đơn giản nhất để cả đội cùng đi một hướng là gì?`,'Mục tiêu quý rõ ràng và buổi họp tuần ngắn giúp cả đội chạy cùng hướng. Quỹ thích đội có nhịp quản trị.','Đặt 3 mục tiêu cho mỗi quý, họp tuần 30 phút để theo dõi tiến độ','Mỗi người tự làm theo ý mình','Chỉ nói miệng khi có việc gấp','Chờ cuối năm mới đánh giá',{m:5,p:3,l:'Quản trị: đội đi cùng hướng'},{m:-5}),
+ K('mgmt',1,'QUẢN TRỊ: DUYỆT CHI',`Ở ${n}, ai nên duyệt một khoản chi lớn, ví dụ trên ${Math.round(bn*300)}K USD?`,'Quy định duyệt chi giúp tiền không bị tiêu tùy tiện. Quỹ nhìn vào kỷ luật chi tiêu trước khi rót vốn.','Có quy định rõ: khoản lớn cần CEO và kế toán trưởng cùng ký','Ai cần là tự chi','Chỉ CEO biết, không ghi lại','Chi trước, báo cáo sau',{cr:3,p:3},{cr:-3,b:4}),
+ K('mgmt',2,'QUẢN TRỊ: GHẾ HĐQT',`Sau khi nhận ${ak}M USD, quỹ muốn một ghế trong hội đồng quản trị của ${n}. Bạn xử lý thế nào?`,'Quỹ có ghế là bình thường. Hãy ghi rõ trong điều lệ những việc cần HĐQT duyệt.','Đồng ý một ghế, ghi vào điều lệ danh sách việc cần HĐQT duyệt','Từ chối mọi quyền của quỹ','Cho quỹ toàn quyền quyết định','Hứa miệng, không ghi vào điều lệ',{cr:3,v:2,l:'Quản trị: điều lệ rõ ràng'},{cr:-3}),
+ K('mgmt',2,'QUẢN TRỊ: BÁO CÁO DÒNG TIỀN',`Mỗi tháng ${n} đốt ${bn}M USD. CEO nên xem báo cáo nào đầu tiên?`,'Dòng tiền cho biết còn sống được bao lâu. Doanh thu đẹp mà hết tiền vẫn phá sản.','Báo cáo dòng tiền: tiền vào, tiền ra, tiền còn và runway','Số lượt tải ứng dụng','Số lượt thích trên mạng xã hội','Chỉ lợi nhuận cuối năm',{b:-3,p:3},{b:4}),
+ K('mgmt',3,'QUẢN TRỊ: PHỤ THUỘC MỘT KHÁCH',`Doanh thu ${rv}M USD/năm của ${n} nhưng một khách chiếm hơn nửa. Quỹ lo rủi ro. Bạn làm gì?`,'Phụ thuộc một khách làm quỹ giảm định giá. Hãy nêu mục tiêu đa dạng hóa cụ thể.','Đặt trần 30% doanh thu cho mỗi khách, mở thêm 2 nhóm khách mới trong 2 quý','Dồn thêm vào khách lớn nhất','Không sao, khách đó rất trung thành','Giấu tỷ trọng khỏi báo cáo',{v:3,cr:2,l:'Quản trị: giảm phụ thuộc khách'},{v:-3,cr:-3}),
+ K('mgmt',3,'QUẢN TRỊ: XUNG ĐỘT SÁNG LẬP',`Hai đồng sáng lập của ${n} bất đồng về hướng đi và quỹ đang theo dõi. Bạn xử lý thế nào?`,'Xung đột sáng lập là rủi ro lớn nhất với quỹ. Cần cơ chế quyết định rõ ràng trong thỏa thuận cổ đông.','Họp có biên bản, nhờ cố vấn độc lập, ghi rõ quyền quyết định từng người trong thỏa thuận cổ đông','Để tự hết','Một người nghỉ ngay, không bàn giao','Giấu quỹ chuyện này',{m:4,cr:2,l:'Quản trị: giải quyết xung đột sáng lập'},{m:-8,cr:-4}),
+ K('hr',1,'NHÂN SỰ: TUYỂN DỤNG',`${n} cần tuyển thêm người cho ${p}. Bước đầu tiên hợp lý là gì?`,'Mô tả công việc rõ ràng giúp tuyển đúng người và tránh tốn lương vô ích.','Viết mô tả công việc rõ: nhiệm vụ, kỹ năng cần, mức lương','Nhận người quen trước','Tuyển nhiều người rồi tính việc sau','Hứa lương gấp đôi thị trường',{m:3,p:3},{b:5}),
+ K('hr',1,'NHÂN SỰ: HỢP ĐỒNG LAO ĐỘNG',`Nhân viên mới vào ${n} nên có giấy tờ gì ngay từ ngày đầu?`,'Hợp đồng và bảo hiểm đúng luật giúp tránh tranh chấp. Data room của quỹ sẽ kiểm tra mục này.','Hợp đồng lao động ký trước khi bắt đầu, có lương, chức danh và bảo hiểm','Thỏa thuận miệng cho linh hoạt','Ký sau 3 tháng','Thử việc thì không cần hợp đồng',{cr:2,p:3},{cr:-3}),
+ K('hr',2,'NHÂN SỰ: ESOP',`${n} muốn giữ chân ${k3} kỹ sư giỏi nhưng chưa đủ tiền tăng lương. Cách phù hợp?`,'ESOP chia theo mốc nhiều năm giúp giữ người mà không chia hết cổ phần ngay.','Lập quỹ ESOP khoảng 10% cổ phần, chia theo 4 năm, người nghỉ trong năm đầu không được nhận','Cho cổ phần ngay, không điều kiện','Hứa miệng sẽ chia khi bán công ty','Không cho cổ phần, chỉ thưởng Tết',{m:6,v:2,l:'Nhân sự: lập ESOP giữ người'},{m:-5}),
+ K('hr',2,'NHÂN SỰ: XIN TĂNG LƯƠNG',`Một quản lý giỏi của ${n} xin tăng lương nhưng ngân sách chật. Bạn quyết định?`,'Trao đổi minh bạch giữ được người mà không phá ngân sách.','Họp riêng, đưa lộ trình tăng lương gắn với mục tiêu doanh thu và đánh giá sau 6 tháng','Từ chối thẳng, không giải thích','Tăng ngay mức họ đòi','Để họ tự nghỉ',{m:5},{m:-7,b:4}),
+ K('hr',3,'NHÂN SỰ: GIẢM CHI PHÍ',`Burn của ${n} là ${bn}M USD/tháng và runway ngắn. Cần giảm khoảng 15% chi phí. Bạn làm gì với nhân sự?`,'Cắt chi phí không tạo doanh thu trước. Nếu phải giảm người thì báo sớm, đền bù đúng luật, giữ vị trí cốt lõi.','Cắt khoản không tạo doanh thu trước, nếu giảm người thì báo sớm, đền bù đúng luật','Sa thải bất ngờ nhiều người cùng lúc','Giảm lương mọi người mà không báo trước','Giữ nguyên tất cả, cầu may',{b:-6,m:-1,cr:2,l:'Nhân sự: giảm chi phí có trách nhiệm'},{m:-12,cr:-4}),
+ K('hr',3,'NHÂN SỰ: NGƯỜI CHỦ CHỐT NGHỈ',`Giám đốc kỹ thuật của ${n} nắm toàn bộ mã nguồn và vừa xin nghỉ. Quỹ hỏi bạn đã chuẩn bị gì?`,'Quỹ định giá thấp hơn khi kiến thức nằm trong đầu một người. Cần tài liệu và điều khoản bàn giao.','Mã nguồn nằm trên kho chung của công ty, có tài liệu quy trình, hợp đồng có điều khoản bàn giao','Mọi thứ nằm trong đầu anh ấy','Mã nguồn lưu máy cá nhân','Tin là anh ấy sẽ không nghỉ',{v:3,cr:2},{v:-4,m:-4}),
+ K('ma',1,'M&A: CÂU HỎI ĐẦU TIÊN',`Một công ty nhỏ cùng ngành muốn bán nhóm khách hàng cho ${n}. Câu hỏi đầu tiên cần đặt?`,'Mua khách hàng thì phải biết bao nhiêu khách đang trả tiền thật và hợp đồng còn bao lâu.','Bao nhiêu khách đang trả tiền và hợp đồng còn hiệu lực bao lâu?','Họ đòi giá bao nhiêu thì trả','Logo công ty họ có đẹp không','Họ có bao nhiêu người theo dõi mạng xã hội',{p:3},{v:-2}),
+ K('ma',1,'M&A: ƯỚC GIÁ ĐƠN GIẢN',`Một công ty đối tác doanh thu ${r1(rv*.4)}M USD/năm muốn bán. Cách ước giá đơn giản và thực tế?`,'Ước giá thường bắt đầu từ doanh thu nhân hệ số của ngành, rồi trừ nợ và rủi ro.','Lấy doanh thu nhân hệ số ngành, rồi trừ nợ và rủi ro','Lấy mức giá bạn thích','Cộng mọi tài sản trên giấy','Hỏi bạn bè đoán',{p:3,v:1},{v:-2}),
+ K('ma',2,'M&A: THẨM ĐỊNH TRƯỚC KHI MUA',`${n} định mua một đội 6 người làm sản phẩm bổ trợ cho ${p}. Việc nào cần làm trước khi ký?`,'Thẩm định giúp phát hiện nợ, tranh chấp bản quyền hoặc hợp đồng bất lợi trước khi trả tiền.','Thẩm định tài chính, hợp đồng, sở hữu trí tuệ và nhân sự chủ chốt','Ký trước, kiểm tra sau','Chỉ xem demo sản phẩm','Chỉ nghe chủ công ty kể',{v:3,cr:2,l:'M&A: thẩm định kỹ trước khi mua'},{v:-4,cr:-3}),
+ K('ma',2,'M&A: ĐIỀU KHOẢN THANH TOÁN',`Bên bán đòi ${n} trả toàn bộ tiền mặt ngay, trong khi runway hạn chế. Bạn đề xuất?`,'Trả theo mốc và giữ lại một phần giúp bảo vệ dòng tiền và có chỗ bồi thường nếu phát sinh.','Trả một phần ngay, phần còn lại theo mốc doanh thu sau 12 tháng, giữ lại một phần để bồi thường','Trả hết ngay cho nhanh','Không trả đồng nào','Trả bằng lời hứa',{b:-2,cr:2},{b:6}),
+ K('ma',3,'M&A: HỢP NHẤT ĐỘI NGŨ',`Sau khi mua đội 6 người, nhân viên cũ của ${n} lo bị cắt giảm. Bạn xử lý?`,'Hợp nhất thất bại thường do con người. Thông báo sớm và giữ người cốt lõi bảo vệ giá trị thương vụ.','Công bố sớm lộ trình hợp nhất, giữ người cốt lõi bằng ESOP và vai trò rõ ràng','Im lặng đến ngày hợp nhất','Sa thải đội cũ sau 1 tháng','Đổi hết quy trình ngay tuần đầu',{m:5,v:3,l:'M&A: hợp nhất đội ngũ êm'},{m:-10,v:-4}),
+ K('ma',3,'M&A: BỊ CHÀO MUA',`Một tập đoàn muốn mua ${n} với giá thấp hơn mốc định giá ${vl}M USD. Quỹ đang theo dõi. Bạn làm gì?`,'Có nhiều bên mua giúp tăng giá. Điều khoản độc quyền cần luật sư đọc kỹ trước khi ký.','Mời thêm 1-2 bên mua, dùng số liệu tăng trưởng để đàm phán, nhờ luật sư kiểm tra điều khoản độc quyền','Chấp nhận ngay vì sợ mất cơ hội','Bỏ ngang, không trả lời','Ký độc quyền 12 tháng mà không đọc kỹ',{v:4,cr:2,p:6,l:'M&A: đàm phán bán công ty'},{v:-6,cr:-4})]}
+{const _q=qBank;qBank=function(S){const b=_q(S),X=mgmtQ(S),LV={seed:1,a:2,b:3};
+ for(const k in b){b[k].forEach(q=>{q.lv=q.lv||LV[k]});b[k]=b[k].concat(X.filter(q=>k==='seed'?q.lv<3:k==='b'?q.lv>1:1).map(q=>({...q,id:k+':'+q.topic})))}return b}}
+const SEQ=[[1,1,2,2],[1,2,2,3],[2,2,3,3]],LVN=['DỄ','VỪA','KHÓ'];
+function pickLv(bank,round){const sh2=CH.n>2?1:0,pool=bank[round].concat(bank[['a','b','a'][CO.r]||'a']),out=[];
+ SEQ[Math.min(2,CO.r)].forEach((L,i)=>{L=Math.min(3,L+(i>1?sh2:0));
+  for(const t of [q=>q.lv===L&&q.cat&&i%2<1,q=>q.lv===L,q=>Math.abs(q.lv-L)<=1,q=>1]){const c=pool.filter(q=>t(q)&&!out.some(o=>o.base===q.topic));
+   if(c.length){const q=pickQ(c,1,'')[0];out.push({...q,base:q.topic,topic:'['+LVN[L-1]+'] '+q.topic});break}}});return out}
+{const _mp=mqPool;mqPool=function(S){const n=S.name,T=S.team;return _mp(S).concat([
+ [`${n} cần tuyển nhân viên mới. Điều gì nên có trước tiên?`,'Mô tả công việc rõ ràng và hợp đồng lao động','Chỉ hứa lương cao','Nhận người quen không cần phỏng vấn'],
+ [`Đội ${n} ${T} người cần cùng hướng. Công cụ quản trị đơn giản nhất?`,'Mục tiêu quý và họp tuần ngắn','Mỗi người tự đặt mục tiêu riêng','Không cần mục tiêu'],
+ [`${n} muốn mua một công ty nhỏ. Trước khi ký cần làm gì?`,'Thẩm định tài chính, hợp đồng và nhân sự','Ký ngay cho kịp cơ hội','Chỉ xem website của họ'],
+ [`Nhân viên chủ chốt của ${n} muốn ở lại lâu dài. Cách giữ chân tốt?`,'ESOP chia theo mốc nhiều năm','Hứa miệng cổ phần','Không trao đổi gì']])}}
+{const cd=Character.prototype.draw;Character.prototype.draw=function(){charShadow(this.x,this.y);return cd.call(this)};
+ const md=Commuter.prototype.draw;Commuter.prototype.draw=function(){if(this.s)charShadow(this.x,this.y,6);return md.call(this)}}
+
 function mqSync(){const S=ST,P=mqPool(S);Object.keys(MQ).forEach((k,i)=>MQ[k]=P.map((_,j)=>P[(j+i*3)%P.length]));
  MQ.bank=[...P.slice(5),[`${S.name} vay ngân hàng để phục vụ ${S.prod}. Điểm tín dụng cao giúp gì nhất?`,'Được duyệt vay dễ hơn, lãi suất tốt hơn','Không phải trả nợ gốc','Được vay vô hạn'],[`Rủi ro ${S.risks[0]} ảnh hưởng thế nào đến khả năng trả nợ của ${S.name}?`,'Làm dòng tiền thiếu ổn định, cần dự phòng','Không ảnh hưởng đến nợ vay','Ngân hàng tự gánh rủi ro']]}
 {const _sc=setupChapter;setupChapter=function(){const r=_sc.apply(this,arguments);mqSync();return r};mqSync()}
