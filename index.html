@@ -2723,7 +2723,7 @@ var CH=[
   {l:'Khớp, không có vấn đề gì',e:{t:-1,v:1},r:'Quỹ ghi chú sẽ đối chiếu lại.',x:'hid',a:{t:-5,v:-9,rp:1},ra:'Quỹ đối chiếu ngay và thấy lệch. Mất uy tín.'},
   {l:'Xin thêm thời gian bổ sung hồ sơ',e:{t:-1,v:-2},r:'Quỹ chấp nhận nhưng kéo dài thẩm định.'}]}],
  br:'Tại {w}: {k} thực đo {u}%, chênh lệch {x}% đã {hs}.'},
-{id:'audit',ar:F_,lv:1,au:.7,ttl:'KPMG kiểm tra sổ sách {w}',vr:[{m:'biên bản bảo trì máy quý trước'},{m:'hóa đơn đầu vào của hai lô hàng lớn'},{m:'hợp đồng nhà cung cấp lớn nhất'}],st:[
+{id:'audit',ar:F_,lv:1,au:.7,ttl:'KPMG kiểm tra sổ sách {w}',vr:[{m:'biên bản bảo trì máy quý trước'},{m:'hóa đơn đầu vào của hai hợp đồng lớn'},{m:'hợp đồng nhà cung cấp lớn nhất'}],st:[
  {t:'v',at:'KPMG',role:'accountant',o:'Gặp kiểm toán viên KPMG tại {w}',s:['KPMG đây. Chúng tôi cần đối chiếu doanh thu, giá vốn và biên gộp của {w}.','Xin phiếu xuất nhập, bảng lương và hợp đồng nhà cung cấp.']},
  {t:'p',at:'doc',o:'Lục tủ hồ sơ tìm tài liệu còn thiếu',s:['Phiếu xuất nhập và bảng lương đầy đủ.','Nhưng không thấy {m}. Cần hỏi người giữ hồ sơ.'],f:'miss'},
  {t:'t',at:'NHÂN SỰ',if:'miss',o:'Hỏi Nhân sự về hồ sơ còn thiếu',s:['Hồ sơ đó ở người phụ trách cũ. Em dựng lại bản sao được trong một ngày.','Nộp muộn thì kiểm toán sẽ ghi chú ngoại lệ.'],f:'found'},
@@ -3117,7 +3117,7 @@ function LQ(id,ar,r,ttl,al,th,st){E(id,'pre',r+1,ttl,{loc:1,ar:ar,lv:r,mr:r,w:3,
 /* ===== VÒNG SEED ===== */
 LQ('fbe',F_,0,'Điểm hòa vốn của {l}','Quản đốc nhờ bạn kiểm tra điểm hòa vốn của {l}','be',[
  Pp('conv','Đo sản lượng thực tế trên {l}',['Sản lượng đo được 8.000 {o} mỗi tháng, thấp hơn công suất thiết kế.','Phép tính hòa vốn phải dựa trên số thực đo, không phải công suất thiết kế.'],'out'),
- Pp('qc','Xem bảng giá thành tại trạm kiểm soát',['Giá bán 150 nghìn mỗi {o}. Biến phí gồm {raw}, nhân công trực tiếp và đóng gói: 96 nghìn mỗi {o}.','Định phí hằng tháng gồm khấu hao, mặt bằng và lương gián tiếp: 540 triệu.'],'cost'),
+ Pp('qc','Xem bảng giá thành tại trạm kiểm soát',['Giá bán 150 nghìn mỗi {o}. Biến phí gồm {raw}, nhân công trực tiếp và chi phí phục vụ: 96 nghìn mỗi {o}.','Định phí hằng tháng gồm khấu hao, mặt bằng và lương gián tiếp: 540 triệu.'],'cost'),
  Tt('KỸ SƯ','Hỏi Kỹ sư về khả năng tối ưu chi phí',['Em giảm được biến phí nếu mua {raw} theo lô lớn, nhưng phải cam kết sản lượng.','Anh/chị cần biết rõ điểm hòa vốn trước khi cam kết.']),
  Qc('KỸ SƯ','Sản lượng hòa vốn mỗi tháng là bao nhiêu {o}?',[
   O('10.000 {o}: định phí 540 triệu chia lãi góp 54 nghìn mỗi {o}',{t:2,v:1,p:3},'Tính đúng lãi góp, quỹ thấy bạn nắm cấu trúc chi phí.',{n:'cost',a:{t:-1,v:-1},ra:'Chưa xem bảng giá thành nên tính theo trí nhớ, bị quỹ hỏi lại là lúng túng.'}),
@@ -3166,13 +3166,13 @@ LQ('scash',MA,0,'Chênh lệch tiền bán hàng ở tạp hóa','Thu ngân báo
 /* ===== VÒNG SERIES A ===== */
 LQ('fcx',F_,1,'Mở rộng thêm một {l}','Quản đốc đề xuất đầu tư thêm một {l}','capx',[
  Pp('conv','Đo tải thực tế của {l} hiện tại',['{l} đang chạy 92% công suất, đơn hàng chờ giao kéo dài hai tuần.','Nhu cầu là thật, nhưng quỹ sẽ hỏi dự án có tạo giá trị không.'],'load'),
- Pp('pack','Xem bảng dự toán dự án',['Vốn đầu tư 12 tỷ, lãi góp tăng thêm 3,6 tỷ mỗi năm trong 6 năm.','Chi phí vốn bình quân (WACC) của công ty là 15%.'],'capex'),
+ Pp('pack','Xem bảng dự toán dự án',['Vốn đầu tư 12 tỷ, dòng tiền tự do tăng thêm (sau thuế) 3,6 tỷ mỗi năm trong 6 năm.','Chi phí vốn bình quân (WACC) của công ty là 15%.'],'capex'),
  Tt('QUẢN ĐỐC','Hỏi Quản đốc về tiến độ triển khai',['Lắp đặt mất ba tháng, trong thời gian đó vẫn phải chạy dây chuyền cũ.','Nếu nhu cầu thấp hơn dự báo, dự án sẽ khó hoàn vốn.']),
  Qc('QUẢN ĐỐC','Giá trị hiện tại ròng (NPV) và thời gian hoàn vốn của dự án là bao nhiêu?',[
   O('NPV khoảng +1,6 tỷ; hoàn vốn khoảng 3,3 năm',{t:2,v:3,p:3},'Hệ số hiện giá 6 năm ở 15% là 3,78: 3,6 × 3,78 - 12 ≈ +1,6 tỷ.',{n:'capex',a:{t:-1},ra:'Chưa xem bảng dự toán nên không đưa được số cụ thể trước quỹ.'}),
   O('NPV khoảng +9,6 tỷ (21,6 - 12), không chiết khấu',{v:2},'Bỏ qua giá trị thời gian của tiền nên NPV bị thổi phồng.',{rk:.6,ex:{t:-3,v:-4},rx:'Quỹ chiết khấu lại dòng tiền và thấy NPV nhỏ hơn rất nhiều.'}),
   O('NPV âm vì hoàn vốn trên 3 năm',{v:-2},'Thời gian hoàn vốn không quyết định dấu của NPV.',{rk:.4,ex:{t:-2},rx:'Quỹ chỉ ra dự án thực tế vẫn tạo giá trị.'})]),
- Qc('QUẢN ĐỐC','Nếu lãi góp tăng thêm chỉ đạt 2,7 tỷ mỗi năm (NPV khoảng -1,8 tỷ), bạn đề xuất gì?',[
+ Qc('QUẢN ĐỐC','Nếu dòng tiền tăng thêm chỉ đạt 2,7 tỷ mỗi năm (NPV khoảng -1,8 tỷ), bạn đề xuất gì?',[
   O('Chia hai giai đoạn: đầu tư 6 tỷ trước, mở rộng tiếp khi đơn hàng chờ vượt ngưỡng',{t:2,v:2,p:3},'Giữ quyền chọn mở rộng, giảm rủi ro khi nhu cầu thấp hơn kỳ vọng.',{n:'load',a:{t:0},ra:'Chưa đo tải thực tế nên ngưỡng kích hoạt giai đoạn hai thiếu cơ sở.'}),
   O('Đầu tư toàn bộ 12 tỷ ngay để chiếm thị phần',{v:3},'Ở kịch bản thấp, dự án làm mất giá trị.',{rk:.5,ex:{c:-1.5,v:-4},rx:'Nhu cầu chậm hơn dự báo, dây chuyền mới chạy dưới công suất.'}),
   O('Hoãn vô thời hạn vì NPV có thể âm',{v:-2,t:-1},'Bỏ lỡ nhu cầu có thật đang chờ giao.')])]);
@@ -3215,7 +3215,7 @@ LQ('sprice',SU,1,'Thử nghiệm giá tại siêu thị mini','Khách thân thi�
 /* ===== VÒNG SERIES B ===== */
 LQ('mpeg',F_,2,'Cầu nối giá trị doanh nghiệp sang giá trị vốn chủ','Bên mua yêu cầu rà soát nợ và vốn lưu động của nhà máy','peg',[
  Pp('doc','Tra hồ sơ nợ và các khoản tương đương nợ',['Nợ vay 33 tỷ, tiền mặt 5 tỷ (nợ ròng 28 tỷ); thuê tài chính 6 tỷ; trợ cấp thôi việc chưa trích lập 2 tỷ.','Bên mua coi thuê tài chính và trợ cấp thôi việc là các khoản tương đương nợ.'],'debt'),
- Pp('pal','Kiểm kho để xác định vốn lưu động',['Vốn lưu động bình quân 12 tháng là 18 tỷ; dự kiến tại ngày closing là 16,5 tỷ.','Tồn kho {raw} giảm vì phải dùng hết trước khi chốt.'],'peg'),
+ Pp('pal','Kiểm số dư vốn lưu động trước closing',['Vốn lưu động bình quân 12 tháng là 18 tỷ; dự kiến tại ngày closing là 16,5 tỷ.','Các khoản phải thu giảm vì khách thanh toán sớm trước ngày chốt.'],'peg'),
  Tt('QUẢN LÝ','Hỏi Quản lý về điều khoản giá của bên mua',['Bên mua chào 8 lần EBITDA 15 tỷ, tức giá trị doanh nghiệp 120 tỷ.','Họ nói giá cuối sẽ điều chỉnh theo nợ và vốn lưu động tại closing.']),
  Qc('QUẢN LÝ','Giá trị vốn chủ sở hữu sau khi trừ nợ ròng và các khoản tương đương nợ?',[
   O('84 tỷ: 120 - 28 - 6 - 2',{t:2,v:2,p:3},'Cầu nối EV sang vốn chủ đúng, không bỏ sót khoản tương đương nợ.',{n:'debt',a:{t:-1},ra:'Chưa rà hồ sơ nên chưa nêu đủ các khoản tương đương nợ.'}),
@@ -3244,7 +3244,7 @@ LQ('mlbo',SU,2,'Bên mua đòn bẩy đề nghị mua lại','Một quỹ mua l�
   O('Khoảng 60,6 tỷ: lãi tối đa 20 / 3 = 6,67 tỷ, chia cho 11%',{t:2,dt:3,v:2,p:3},'Tính đúng trần nợ, bảo vệ công ty khỏi vi phạm cam kết vay.',{n:'lev',a:{t:-1},ra:'Chưa xem số EBITDA và điều khoản vay nên chưa phản biện được đề xuất.'}),
   O('80 tỷ: chấp nhận đề xuất của bên mua',{dt:2,v:2},'Với 80 tỷ, EBITDA / lãi vay chỉ khoảng 2,3 lần, dưới ngưỡng.',{rk:.6,ex:{t:-3,v:-4},rx:'Ngân hàng của bên mua từ chối, giá phải điều chỉnh.'}),
   O('90,9 tỷ: lãi tối đa 10 tỷ chia cho 11%',{v:1},'Dùng ngưỡng 2,0 lần thay vì 3,0 lần.',{rk:.5,ex:{t:-2,dt:-3},rx:'Quỹ chỉ ra bạn dùng sai ngưỡng cam kết vay.'})]),
- Qc('BÊN MUA','Với nợ 60 tỷ, vốn chủ 60 tỷ, EBITDA 20 tỷ lên 30 tỷ sau 5 năm (nợ còn 40 tỷ), quỹ đạt IRR khoảng bao nhiêu?',[
+ Qc('BÊN MUA','Với nợ 60 tỷ, vốn chủ 60 tỷ, EBITDA 20 tỷ lên 30 tỷ sau 5 năm (thoát vốn ở 6 lần EBITDA, nợ còn 40 tỷ), quỹ đạt IRR khoảng bao nhiêu?',[
   O('Khoảng 18,5% mỗi năm (MOIC 2,33 lần: vốn chủ 60 lên 140 tỷ)',{t:2,dt:3,v:2,p:3},'Tính đúng IRR từ MOIC và số năm nắm giữ.',{n:'lev',a:{t:-1},ra:'Chưa nắm cấu trúc vốn nên chưa kiểm tra được lợi suất của quỹ.'}),
   O('Khoảng 133% (140 / 60 - 1)',{v:1},'Nhầm tổng lợi suất cả kỳ với lợi suất hằng năm.',{rk:.5,ex:{t:-2},rx:'Quỹ thấy bạn nhầm IRR với tổng lợi nhuận.'}),
   O('Khoảng 26,7% (133% chia 5)',{},'Chia đều theo năm, bỏ qua lãi kép.',{rk:.5,ex:{t:-2,dt:-2},rx:'Quỹ chỉ ra sai sót khi tính lãi kép.'})])]);
@@ -3275,7 +3275,7 @@ DQ('dsafe',0,'Chuyển đổi SAFE của nhà đầu tư thiên thần','Nhà đ
  Qc('CFO','Muốn founder giữ tối thiểu 78% sau vòng (SAFE 10% trước vòng, quỹ mới rót 10 tỷ), định giá trước vòng tối thiểu là bao nhiêu?',[
   O('65 tỷ: 90% × 65 / 75 = 78%',{t:2,dt:3,p:3},'Tính đúng, có cơ sở để đàm phán định giá.',{n:'safe',a:{t:-1},ra:'Chưa có điều khoản SAFE nên chưa chắc về tỷ lệ 10% trước vòng.'}),
   O('45,5 tỷ: quỹ chỉ được giữ 22%, rót 10 tỷ',{v:1},'Quên rằng SAFE đã chiếm 10% trước vòng.',{rk:.5,ex:{dt:-3},rx:'Quỹ chỉ ra con số không khớp với cap table.'}),
-  O('55 tỷ để chốt nhanh',{v:1},'Founder chỉ còn khoảng 74,3% sau vòng, dưới mục tiêu.',{rk:.4,ex:{m:-2},rx:'Founder thấy bị pha loãng quá mức so với kế hoạch.'})])]);
+  O('55 tỷ để chốt nhanh',{v:1},'Founder chỉ còn khoảng 76,2% sau vòng, dưới mục tiêu 78%.',{rk:.4,ex:{m:-2},rx:'Founder thấy bị pha loãng quá mức so với kế hoạch.'})])]);
 DQ('dvcm',0,'Quỹ thiên thần định giá bằng phương pháp VC','Quỹ thiên thần muốn trao đổi về định giá',[
  Pp('lp','Xem mô hình dự báo tại sảnh LOCPHAT',['Doanh thu năm 5 dự kiến 80 tỷ; bội số thoát vốn 5x doanh thu, tức giá trị thoát 400 tỷ.','Dự kiến pha loãng thêm 40% từ các vòng sau.'],'exit'),
  Tt('INDIVIDUAL INVESTOR','Hỏi nhà đầu tư cá nhân về mục tiêu lợi suất',['Giai đoạn seed tôi cần 10 lần vốn sau 5 năm vì nhiều dự án sẽ thất bại.','Tôi rót 5 tỷ, anh/chị tính định giá hợp lý đi.']),
@@ -3327,7 +3327,7 @@ DQ('dwf',1,'Mô phỏng thác nước thanh lý khi bán công ty','Luật sư c
  Qc('LAWYER','Bán 40 tỷ: Series A, Seed và founder + ESOP mỗi bên nhận bao nhiêu?',[
   O('Series A 20 tỷ; Seed 6 tỷ; founder và ESOP 14 tỷ',{t:2,dt:2,p:3},'Đúng: cả hai nhóm ưu đãi nhận ưu tiên vì chuyển đổi cho ít hơn.',{n:'pref',a:{t:-1},ra:'Chưa đọc điều khoản nên chưa chắc thứ tự trả trước.'}),
   O('Series A 10 tỷ; Seed 4 tỷ; founder và ESOP 26 tỷ (chia theo tỷ lệ sở hữu)',{v:2},'Bỏ qua quyền ưu tiên thanh lý.',{rk:.6,ex:{t:-3,dt:-3},rx:'Luật sư của quỹ chỉ ra thứ tự ưu tiên, founder bị bất ngờ.'}),
-  O('Series A 20 tỷ; Seed 4 tỷ; founder và ESOP 16 tỷ',{},'Seed chuyển đổi cho 4 tỷ thấp hơn 6 tỷ ưu tiên nên sẽ chọn ưu tiên.',{rk:.5,ex:{t:-2},rx:'Seed nhắc lại quyền ưu tiên của mình.'})]),
+  O('Series A 20 tỷ; Seed 4 tỷ; founder và ESOP 16 tỷ',{},'Seed nhận ưu tiên 6 tỷ, cao hơn mọi cách chuyển đổi nên không thể chỉ nhận 4 tỷ.',{rk:.5,ex:{t:-2},rx:'Seed nhắc lại quyền ưu tiên của mình.'})]),
  Qc('LAWYER','Ở mức bán nào Series A bắt đầu chọn chuyển đổi thay vì nhận ưu tiên (bỏ qua Seed)?',[
   O('80 tỷ: 25% × giá bán ≥ 20 tỷ',{t:2,dt:3,p:3},'Đúng ngưỡng chuyển đổi của cổ phần ưu đãi không tham gia.',{n:'pref',a:{t:-1},ra:'Chưa có tỷ lệ sở hữu cụ thể nên khó trả lời nhanh.'}),
   O('20 tỷ: bằng khoản đã đầu tư',{v:1},'Nhầm mức nhận ưu tiên với ngưỡng chuyển đổi.',{rk:.5,ex:{t:-2},rx:'Quỹ chỉ ra sai lầm cơ bản về cổ phần ưu đãi.'}),
@@ -3336,7 +3336,7 @@ DQ('dwf',1,'Mô phỏng thác nước thanh lý khi bán công ty','Luật sư c
 DQ('daccr',2,'Thương vụ mua lại: tăng hay giảm EPS bên mua','Tập đoàn bên mua gửi phân tích EPS',[
  Pp('mv','Xem hồ sơ bên mua tại sảnh MAYVIET',['Bên mua: lợi nhuận 80 tỷ, 40 triệu cổ phiếu, giá 30.000 đồng (P/E 15).','Công ty bạn: lợi nhuận 12 tỷ; bên mua chào 150 tỷ.'],'acq'),
  Tt('VC','Hỏi VC về hợp đồng mua lại',['Bên mua chỉ đồng ý nếu thương vụ không làm giảm EPS của họ.','Họ sẽ trả bằng cổ phiếu hoặc vay nợ lãi 10%, thuế 20%.']),
- Qc('VC','Nếu trả bằng cổ phiếu, EPS bên mua thay đổi bao nhiêu?',[
+ Qc('VC','Nếu trả bằng cổ phiếu, EPS bên mua thay đổi bao nhiêu (chưa tính synergy và khấu hao tài sản đánh giá lại)?',[
   O('Tăng khoảng 2,2%: phát hành 5 triệu cổ phiếu, EPS từ 2.000 lên khoảng 2.044 đồng',{t:2,dt:3,v:2,p:3},'Đúng: P/E của mục tiêu (12,5) thấp hơn P/E bên mua (15) nên tăng EPS.',{n:'acq',a:{t:-1},ra:'Chưa có số bên mua nên chỉ nêu được logic chung.'}),
   O('Giảm 2,2% vì phát hành thêm cổ phiếu',{v:1},'Quên cộng lợi nhuận của công ty bị mua.',{rk:.5,ex:{t:-2},rx:'Bên mua tính lại và thấy bạn chưa nắm cơ chế EPS.'}),
   O('Không đổi vì giá trị bằng nhau',{},'Bỏ qua chênh lệch P/E giữa hai bên.',{rk:.5,ex:{t:-2},rx:'Bên mua chỉ ra lợi thế của P/E thấp hơn.'})]),
@@ -3354,7 +3354,58 @@ DQ('dsotp',2,'Định giá từng bộ phận khi bán một đơn vị','Quỹ 
  Qc('CFO','Bán đơn vị B 48 tỷ rồi trả hết nợ 30 tỷ thì tiền mặt ròng còn lại là bao nhiêu?',[
   O('12,4 tỷ: 48 - 5,6 (thuế 20% × 28) - 30',{c:1,t:2,p:3},'Tính đúng sau thuế, có kế hoạch sử dụng tiền thu về.',{n:'sotp',a:{c:.5},ra:'Chưa chắc về giá gốc nên thuế chỉ ước lượng.'}),
   O('18 tỷ: 48 - 30, bỏ qua thuế',{v:1},'Bỏ qua thuế trên phần lãi bán.',{rk:.5,ex:{c:-1.5,t:-2},rx:'Cơ quan thuế yêu cầu nộp thuế, tiền mặt hụt.'}),
-  O('9,6 tỷ: 48 - 9,6 (thuế 20% × 48) - 30',{},'Tính thuế trên toàn bộ giá bán thay vì phần lãi.')])]);
+  O('8,4 tỷ: 48 - 9,6 (thuế 20% × 48) - 30',{},'Tính thuế trên toàn bộ giá bán thay vì phần lãi.')])]);
+/* ---------- Biến thể cho ngành dịch vụ (saas/edu/fintech): không dùng khái niệm hàng tồn kho ---------- */
+LQ('fdr',F_,0,'Doanh thu hoãn lại của gói trả trước','Kế toán báo hợp đồng gói trả trước chưa ghi nhận đúng','dr',[
+ Pp('doc','Tra hợp đồng gói trả trước tại tủ hồ sơ',['Khách ký {o} 12 tháng, thanh toán trước 7,2 tỷ vào ngày 1/10; dịch vụ bắt đầu cùng ngày.','Kỳ báo cáo kết thúc ngày 31/12; sales muốn ghi nhận cả 7,2 tỷ vào quý này.'],'dr'),
+ Pp('mach','Đối chiếu nhật ký cung cấp dịch vụ tại {l}',['Dịch vụ được cung cấp đều trong 12 tháng, không có mốc bàn giao một lần.','Không có điều khoản hoàn tiền đáng kể trước hạn.'],'srv'),
+ Tt('KẾ TOÁN','Hỏi Kế toán về cách ghi nhận',['Doanh thu ghi nhận dần theo thời gian cung cấp dịch vụ (IFRS 15, VAS 14).','Phần đã thu tiền nhưng chưa phục vụ là nghĩa vụ chưa thực hiện.']),
+ Qc('KẾ TOÁN','Doanh thu quý này và số dư doanh thu hoãn lại ngày 31/12 là bao nhiêu?',[
+  O('1,8 tỷ; doanh thu hoãn lại 5,4 tỷ (7,2 × 3/12 và 7,2 × 9/12)',{t:2,v:1,p:3},'Đúng: ghi nhận theo thời gian phục vụ, phần còn lại là nghĩa vụ chưa thực hiện.',{n:'dr|srv',a:{t:-1},ra:'Chưa đối chiếu hợp đồng và nhật ký dịch vụ nên chưa chắc về thời điểm bắt đầu.'}),
+  O('7,2 tỷ; doanh thu hoãn lại 0',{v:4},'Ghi nhận ngay khi thu tiền làm doanh thu quý bị thổi phồng.',{w:'hid',rk:.6,ex:{t:-4,v:-6,rp:1},rx:'Quỹ điều chỉnh giảm doanh thu và nghi ngờ chính sách ghi nhận.'}),
+  O('3,6 tỷ; doanh thu hoãn lại 3,6 tỷ (chia đôi)',{v:1},'Chia nửa năm không khớp với thời gian dịch vụ thực tế.',{rk:.5,ex:{t:-2},rx:'Quỹ tính lại theo số tháng đã phục vụ.'})]),
+ Qc('KẾ TOÁN','Quỹ hỏi: khoản thu 7,2 tỷ tác động thế nào đến billings và dòng tiền hoạt động?',[
+  O('Billings quý 7,2 tỷ (1,8 doanh thu + 5,4 tăng doanh thu hoãn lại); tiền thu vượt doanh thu 5,4 tỷ nhưng là nghĩa vụ phải phục vụ tiếp',{t:2,v:2,p:3},'Đúng: tách dòng tiền khỏi doanh thu và nêu rõ nghĩa vụ phục vụ.',{n:'dr',a:{t:-1},ra:'Chưa có hợp đồng nên chưa chứng minh được số billings.'}),
+  O('Billings 1,8 tỷ vì chỉ tính doanh thu đã ghi nhận',{v:1},'Nhầm billings với doanh thu ghi nhận.',{rk:.5,ex:{t:-2,v:-3},rx:'Quỹ chỉ ra bạn nhầm billings với doanh thu.'}),
+  O('Dòng tiền không đổi vì chỉ là khoản ghi sổ',{},'Tiền đã thu thật nên dòng tiền hoạt động tăng.',{rk:.5,ex:{t:-2},rx:'Quỹ chỉ ra khoản thu sớm đã tác động dòng tiền.'})])]);
+LQ('fgm',F_,1,'Biên gộp và bậc chi phí hạ tầng','Quỹ muốn xem biên gộp của {pd} khi tăng trưởng','gm',[
+ Pp('doc','Xem báo cáo kết quả kinh doanh tại tủ hồ sơ',['Doanh thu năm 24 tỷ. Giá vốn gồm hạ tầng cố định 6,0 tỷ, hỗ trợ khách hàng 15% doanh thu (3,6 tỷ), phí cổng thanh toán 2% doanh thu (0,48 tỷ).','Quỹ đang so biên gộp với nhóm doanh nghiệp tương đồng.'],'gm'),
+ Pp('mach','Xem hợp đồng hạ tầng tại {l}',['Hạ tầng tính 6,0 tỷ mỗi năm tới mức doanh thu 25 tỷ; vượt mức đó chuyển sang bậc 8,0 tỷ mỗi năm.','Bậc mới áp dụng cho cả năm, không tính theo tỷ lệ.'],'tier'),
+ Tt('KỸ THUẬT','Hỏi Kỹ thuật về kế hoạch tăng trưởng',['Kế hoạch năm tới tăng khoảng 10% doanh thu, tức khoảng 26,4 tỷ.','Mức đó sẽ vượt ngưỡng bậc hạ tầng hiện tại.']),
+ Qc('KỸ THUẬT','Biên gộp hiện tại là bao nhiêu và lên bao nhiêu nếu doanh thu tăng 10% mà hạ tầng vẫn ở bậc 6,0 tỷ?',[
+  O('58,0%, lên 60,3% nhờ chi phí hạ tầng cố định',{t:2,v:2,p:3},'Đúng: (24 - 6 - 3,6 - 0,48) / 24 và (26,4 - 6 - 3,96 - 0,528) / 26,4.',{n:'gm',a:{t:-1},ra:'Chưa xem báo cáo nên chưa tách được phần cố định và biến đổi.'}),
+  O('42,0%, lên 43,0%: lấy tỷ lệ giá vốn làm biên gộp',{v:1},'Nhầm tỷ lệ giá vốn với biên gộp.',{rk:.5,ex:{t:-2,v:-3},rx:'Quỹ chỉ ra bạn nhầm giá vốn với biên gộp.'}),
+  O('75,0%, lên 77,3%: chỉ trừ hạ tầng cố định',{v:2},'Bỏ sót chi phí hỗ trợ và phí thanh toán.',{rk:.5,ex:{t:-2,v:-3},rx:'Quỹ tính lại biên gộp và hạ định giá.'})]),
+ Qc('KỸ THUẬT','Doanh thu tăng 10% vượt bậc hạ tầng (8,0 tỷ): biên gộp mới, lợi nhuận gộp thay đổi thế nào và bạn đề xuất gì?',[
+  O('52,7%; lợi nhuận gộp gần như không tăng (13,91 so với 13,92 tỷ); đàm phán bậc giá theo mức sử dụng',{t:2,v:2,p:3},'Đúng: bậc chi phí cố định xóa sạch đòn bẩy hoạt động của phần tăng trưởng.',{n:'tier',a:{t:-1},ra:'Chưa xem hợp đồng hạ tầng nên chưa thấy tác động của bậc giá.'}),
+  O('60,3%; lợi nhuận gộp tăng thêm khoảng 2,0 tỷ',{v:3},'Bỏ qua bậc hạ tầng mới nên đánh giá quá cao.',{rk:.6,ex:{t:-3,v:-4},rx:'Quỹ tính lại có bậc giá và thấy mô hình sai.'}),
+  O('52,7%; chủ động giữ doanh thu dưới 25 tỷ',{v:-3},'Từ bỏ tăng trưởng thay vì đàm phán lại điều khoản hạ tầng.',{rk:.4,ex:{rv:-3},rx:'Quỹ coi đây là tín hiệu thiếu tham vọng tăng trưởng.'})])]);
+LQ('sdso',MA,0,'Chiết khấu thanh toán sớm của khách lớn','Khách lớn đề nghị chiết khấu nếu thanh toán sớm','disc',[
+ Pp('sale','Xem điều khoản thanh toán trong sổ bán hàng',['Khách lớn đề nghị điều khoản 2/10 net 30: chiết khấu 2% nếu trả trong 10 ngày, nếu không phải trả đủ trong 30 ngày.','Chi phí vay ngắn hạn của công ty là 14% mỗi năm.'],'disc'),
+ Pp('cash','Xem tuổi nợ phải thu tại quầy thu ngân',['Phần lớn khách đang trả vào ngày thứ 30.','Hạn mức vay còn dư để tài trợ vốn lưu động.'],'aging'),
+ Tt('NHÀ PHÂN PHỐI','Hỏi Nhà phân phối về đề nghị chiết khấu',['Nếu có chiết khấu thì chúng tôi sẽ thanh toán sớm.','Mức 2% là thông lệ ở nhiều đối tác khác.']),
+ Qc('NHÀ PHÂN PHỐI','Chi phí tài chính quy năm của điều khoản 2/10 net 30 là bao nhiêu và có đáng chấp nhận không?',[
+  O('Khoảng 37,2% mỗi năm (2/98 × 365/20), cao hơn nhiều chi phí vay 14%: không chấp nhận nguyên trạng',{t:2,v:1,p:3},'Đúng: ngày được vay thêm chỉ có 20 ngày, chi phí quy năm rất cao.',{n:'disc',a:{t:-1},ra:'Chưa xem điều khoản nên chưa tính được chi phí cụ thể.'}),
+  O('Khoảng 2,0% vì chiết khấu chỉ 2%',{v:2},'Quên quy năm theo 20 ngày được hưởng.',{rk:.5,ex:{t:-2,v:-3},rx:'Quỹ chỉ ra chi phí thật cao hơn nhiều.'}),
+  O('Khoảng 18,6% (2/98 × 365/40)',{},'Dùng sai số ngày: kỳ ưu đãi là 20 ngày (30 trừ 10).',{rk:.5,ex:{t:-2},rx:'Quỹ tính lại và thấy sai số ngày.'})]),
+ Qc('NHÀ PHÂN PHỐI','Mức chiết khấu tối đa (điều khoản x/10 net 30) để chi phí quy năm không vượt chi phí vay 14%?',[
+  O('Khoảng 0,76%: d / (1 - d) × 365/20 ≤ 14%',{t:2,dt:1,p:3},'Đúng: đề xuất mức này làm điểm hòa vốn khi đàm phán.',{n:'disc',a:{t:-1},ra:'Chưa có chi phí vay trong hồ sơ nên chưa có căn cứ.'}),
+  O('Khoảng 1,0% (chi phí quy năm khoảng 18,4%)',{v:1},'Chi phí quy năm của mức 1% vẫn cao hơn 14%.',{rk:.5,ex:{t:-2},rx:'Quỹ tính lại: mức này đắt hơn vay ngân hàng.'}),
+  O('Khoảng 14%: bằng lãi suất vay',{},'Nhầm lãi suất quy năm với mức chiết khấu mỗi kỳ.',{rk:.5,ex:{t:-2,v:-2},rx:'Quỹ chỉ ra sai khác đơn vị giữa tỷ lệ kỳ và tỷ lệ năm.'})])]);
+LQ('snrr',MA,1,'Giữ chân khách hàng và doanh thu mở rộng','Quỹ muốn xem chỉ số giữ chân khách hàng','nrr',[
+ Pp('sale','Xem sổ doanh thu định kỳ theo nhóm khách',['Doanh thu định kỳ đầu kỳ 10,0 tỷ. Trong kỳ: mở rộng thêm 1,5 tỷ, giảm gói 0,4 tỷ, khách rời bỏ 0,9 tỷ.','Quỹ so NRR và GRR với chuẩn của nhóm tăng trưởng.'],'nrr'),
+ Pp('cash','Xem doanh thu theo kỳ tại quầy thu ngân',['Doanh thu kỳ này có thêm 20% từ khách mới.','Khách mới không nằm trong phép tính giữ chân.'],'cohort'),
+ Tt('NHÀ PHÂN PHỐI','Hỏi Nhà phân phối về nhu cầu mở rộng',['Chúng tôi sẽ mua thêm nếu có gói phù hợp hơn.','Có vài khách nhỏ đang cân nhắc rời đi vì giá.']),
+ Qc('NHÀ PHÂN PHỐI','NRR và GRR kỳ này là bao nhiêu?',[
+  O('NRR 102%; GRR 87%, đều loại khách mới',{t:2,v:2,p:3},'Đúng: NRR gồm mở rộng, GRR chỉ tính phần giảm và rời bỏ.',{n:'nrr|cohort',a:{t:-1},ra:'Chưa có số sổ doanh thu nên chưa chốt được hai chỉ số.'}),
+  O('NRR 87%; GRR 102%: đảo nhãn hai chỉ số',{v:2},'GRR không thể vượt 100%.',{rk:.5,ex:{t:-2,v:-3},rx:'Quỹ chỉ ra GRR vượt 100% là vô lý.'}),
+  O('NRR 115%; GRR 87%: chỉ cộng mở rộng, bỏ giảm gói và rời bỏ',{v:3},'Bỏ sót phần giảm gói và rời bỏ khi tính NRR.',{rk:.6,ex:{t:-3,v:-4},rx:'Quỹ tính lại NRR đầy đủ và hạ định giá.'})]),
+ Qc('NHÀ PHÂN PHỐI','Quỹ kỳ vọng NRR từ 110% (giảm gói và rời bỏ không đổi). Cần tăng thêm bao nhiêu doanh thu mở rộng?',[
+  O('Thêm 0,8 tỷ (lên 2,3 tỷ): (10 + 2,3 - 1,3) / 10 = 110%',{t:2,v:2,p:3},'Đúng, kèm kế hoạch nâng cấp gói cho nhóm dùng nhiều.',{n:'nrr',a:{t:-1},ra:'Chưa có số kỳ này nên chưa dựng được mục tiêu.'}),
+  O('Thêm 1,0 tỷ: (110% - 100%) × 10 tỷ',{v:1},'Quên phần giảm gói và rời bỏ đang kéo NRR xuống.',{rk:.5,ex:{t:-2},rx:'Quỹ tính lại: với 1,0 tỷ bạn vượt 110% một chút.'}),
+  O('Thêm 8 tỷ: nhầm 8 điểm phần trăm với tỷ đồng',{},'Sai đơn vị: 8 điểm phần trăm của 10 tỷ là 0,8 tỷ.',{rk:.6,ex:{t:-3,v:-3},rx:'Quỹ chỉ ra sai đơn vị nghiêm trọng.'})])]);
+function IX(ids,a){ids.forEach(function(i){CH.forEach(function(c){if(c.id==i)c.ix=a})})}
+IX(['fdr','fgm','sdso','snrr'],['saas','edu','fintech']);IX(['sshr','scons','fqual','short','excess','invmis'],['food','ecom']);IX(['fcap','surge'],['food','ecom','health']);
 /* ---------- STATE ---------- */
 var ST={k:'',on:{},d:{},p:{},f:{},cur:null,br:[],vis:[],busy:0,pl:{},fr:{},arm:{},dk:'',cd:'',fin:null,closing:0,w:0};
 var W={nm:'',f:{},q:[],u:{}};
@@ -3485,6 +3536,7 @@ function fin(c){
 function sty(k){var v=X.I[k];return v&&v.style||'pe'}
 function M(){return{cash:S.cash,burn:S.burn,rw:S.cash/Math.max(S.burn,.03),rev:S.rev,val:S.val,rep:S.rep||0,r:S.r||0,n:R.n||1,f:F}}
 function elig(c,ph,k,used,L){
+ if(c.ix&&c.ix.indexOf(ind())<0)return 0;
  if(!L&&c.loc||L&&(!c.loc||L!==1&&L.indexOf(c.ar)<0)||c.mr!=null&&(S.r||0)>c.mr)return 0;
  if(c.ph!=ph||used[c.id]||ST.d[c.id]||(c.lv||0)>(S.r||0)||(c.dl||1)>(S.r||0)+1+((R.n||1)>2?1:0))return 0;
  if(c.ft&&c.ft.indexOf(sty(k))<0)return 0;if(c.ind&&c.ind.indexOf(ind())<0)return 0;
