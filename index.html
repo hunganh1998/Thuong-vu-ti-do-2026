@@ -594,7 +594,7 @@ function px(c,x,y,w,h,col,a){c.globalAlpha=a;c.fillStyle=col;c.fillRect(Math.rou
 function fx(s,g){
   var m=g.map;if(!m||m.key==='__')return;if(FX.key!==m.key||FX.L!==m.L)buildFx(m);
   var c=s.getContext('2d'),ind=indoor(m),i,a,t;c.save();c.imageSmoothingEnabled=false;
-  c.globalCompositeOperation='lighter';c.globalAlpha=.8+.2*Math.sin(T*3.1);if(ind)D.call(c,FX.c,0,0);
+  c.globalCompositeOperation='lighter';c.globalAlpha=.8+.2*Math.sin(T*3.1);
   c.globalAlpha=1;
   if(ind){
     for(i=0;i<30;i++){var mx=(HS(i)*W+T*(1.5+HS(i+9)*2.5))%W,my=26+HS(i+3)*120+Math.sin(T*.6+i)*5;px(c,mx,my,1,1,'#ffeccc',.18+.3*Math.max(0,Math.sin(T*1.6+i*5)))}
@@ -607,7 +607,7 @@ function fx(s,g){
       for(var k=0;k<3;k++){var ph=Math.sin(T*1.2+HS(bi*7+k)*40);if(ph>.93){var gx=b.x+6+HS(bi*5+k)*(b.w-12),gy=b.top+14+HS(bi*3+k+1)*Math.max(8,150-b.top-34);px(c,gx,gy,1,1,'#fff',.95);px(c,gx-1,gy,3,1,'#fff',.45);px(c,gx,gy-1,1,3,'#fff',.45)}}
       if(m.key==='industrialZone')for(var q=0;q<7;q++){a=(T*.22+q/7+bi*.19)%1;var sx=b.x+b.w*.8+a*26+Math.sin(a*5+bi)*3,sy=b.top-3-a*34,sz=3+a*6|0;px(c,sx,sy,sz,sz-1,'#c4ccd8',(1-a)*.28)}});
   }
-  c.globalCompositeOperation='soft-light';c.globalAlpha=.3;var gr=c.createLinearGradient(0,0,W,H);gr.addColorStop(0,'#ffc890');gr.addColorStop(.55,'#9aa0b0');gr.addColorStop(1,'#5a7ae0');c.fillStyle=gr;c.fillRect(0,14,W,H-14);
+  if(!ind){c.globalCompositeOperation='soft-light';c.globalAlpha=.3;var gr=c.createLinearGradient(0,0,W,H);gr.addColorStop(0,'#ffc890');gr.addColorStop(.55,'#9aa0b0');gr.addColorStop(1,'#5a7ae0');c.fillStyle=gr;c.fillRect(0,14,W,H-14)}
   c.restore();
 }
 P.drawImage=function(s,x,y,w,h){
@@ -615,7 +615,7 @@ P.drawImage=function(s,x,y,w,h){
     var cv=this.canvas,n=arguments.length;
     if(cv.width===W&&cv.height===H&&n===5){
       if(s.width===48&&s.height===64&&w===24){
-        var g=G(),cx=x+12,fy=y+32,sc=Math.min(1.08,Math.max(.9,.92+(fy-150)*.0036)),nw=Math.round(24*sc/2)*2,nh=Math.round(32*sc/2)*2;
+        var g=G(),cx=x+12,fy=y+32,nw=24,nh=32;
         var me=g&&g.player&&Math.abs(cx-g.player.x)<2.5&&Math.abs(fy-g.player.y)<5;
         shadow(this,Math.round(cx),Math.round(fy),Math.round(nw*.62),.36);
         if(me){ring(this,Math.round(cx),Math.round(fy),11);S.hx=cx;S.hy=fy-nh;S.ft=FR}
@@ -1587,7 +1587,7 @@ else {
     const _0x23fef5 = _0x84ce37('js'), _0x1f8f4d = _0x84ce37('kn'), _0x2f5c81 = () => Object["assign"](_0x3a6876["keys"], { 'left': 0x0, 'right': 0x0, 'up': 0x0, 'down': 0x0 }), _0x52d119 = _0x249e5c => { const _0x2d4ce6 = _0x2b91c3, _0x148129 = _0x2b91c3, _0x1ea0ab = _0x23fef5["getBoundingClientRect"](), _0x41f767 = _0x1ea0ab["width"] / 0x2; let _0x5602e5 = _0x249e5c["clientX"] - _0x1ea0ab["left"] - _0x41f767, _0x53e78b = _0x249e5c["clientY"] - _0x1ea0ab["top"] - _0x41f767; const _0x1c2759 = Math["hypot"](_0x5602e5, _0x53e78b); _0x1c2759 > _0x41f767 && (_0x5602e5 *= _0x41f767 / _0x1c2759, _0x53e78b *= _0x41f767 / _0x1c2759), _0x1f8f4d["style"]["transform"] = "translate(" + _0x5602e5 + "px," + _0x53e78b + "px)", Object["assign"](_0x3a6876['keys'], { 'left': _0x5602e5 < -0xe, 'right': _0x5602e5 > 0xe, 'up': _0x53e78b < -0xe, 'down': _0x53e78b > 0xe }); };
     _0x23fef5["onpointerdown"] = _0x6afa52 => { const _0x13eaf0 = _0x130719, _0x710a39 = _0x130719; _0x1596f8 = _0x6afa52["pointerId"], _0x23fef5["setPointerCapture"](_0x1596f8), _0x52d119(_0x6afa52); }, _0x23fef5["onpointermove"] = _0x2a32e8 => { const _0xb3d203 = _0x130719; if (_0x2a32e8["pointerId"] === _0x1596f8)
         _0x52d119(_0x2a32e8); }, _0x23fef5["onpointerup"] = _0x23fef5["onpointercancel"] = () => { const _0x3cd2c6 = _0x130719, _0x209a61 = _0x130719; _0x1596f8 = null, _0x1f8f4d["style"]["transform"] = '', _0x2f5c81(); }, _0x84ce37('be')["onpointerdown"] = _0x2e0f32 => { const _0x4a33b8 = _0x2b91c3, _0x47af21 = _0x2b91c3; _0x2e0f32["preventDefault"](), _0x3a6876["inter"]['press'](_0x3a6876); };
-} const _0x58bcb5 = document["getElementById"]('c'), _0x4cd425 = _0x58bcb5["getContext"]('2d'); function _0xaeaaeb() { const _0x2b76f7 = _0x2b91c3, _0x598a71 = _0x2b91c3, _0x1664e8 = _0x58bcb5["getBoundingClientRect"](), _0x163522 = Math["min"](window["devicePixelRatio"] || 0x1, 0x2), _0x48416a = _0x396f63 * Math["max"](0x1, Math["min"](0x4, Math["round"](_0x1664e8["width"] * _0x163522 / _0x396f63))); _0x58bcb5["width"] = _0x48416a, _0x58bcb5['height'] = Math['round'](_0x48416a * _0x45a182 / _0x396f63); } function _0x2ca9bc() { const _0x77f6e1 = _0x2b91c3, _0x3d087c = _0x2b91c3; _0x4cd425["imageSmoothingEnabled"] = ![], _0x4cd425["drawImage"](_0x47f542, 0x0, 0x0, _0x58bcb5["width"], _0x58bcb5["height"]), _0x5189ab["forEach"](_0x39a8f6 => _0x4c2314(..._0x39a8f6)), _0x49e905(), _0x4cd425["save"](), _0x4cd425["globalAlpha"] = 0.4, _0x4cd425["fillStyle"] = '#fff', _0x4cd425["shadowColor"] = "#000", _0x4cd425["shadowBlur"] = 0x3, _0x4cd425["font"] = Math['max'](0xa, _0x58bcb5["height"] / 0x30 | 0x0) + "px sans-serif", _0x4cd425["textAlign"] = "right", _0x4cd425['fillText']("© Hùng Anh", _0x58bcb5["width"] - 0x8, _0x58bcb5["height"] - 0x8), _0x4cd425["restore"](); } _0xaeaaeb(), addEventListener("resize", () => { _0xaeaaeb(), _0x3d898c['clear'](); }); function _0x5a4ad4(_0x57cd3a, _0x5a780c, _0x4b85d4) { const _0x4a7487 = _0x130719, _0x12ffe5 = _0x130719, _0x20416f = _0x141304(_0x4b85d4) + 0xa, _0x5db8f4 = _0x57cd3a + (_0x20416f >> 0x1); _0x367738(_0x5db8f4, _0x5a780c + 0xc, 0x2, 0xac - _0x5a780c - 0xc, "#2f3440"), _0x367738(_0x5db8f4 - 0x1, 0xab, 0x4, 0x2, '#242832'), _0x367738(_0x57cd3a, _0x5a780c, _0x20416f, 0xc, "#ecf2ff"), _0x367738(_0x57cd3a + 0x1, _0x5a780c + 0x1, _0x20416f - 0x2, 0xa, "#2558b8"), _0x367738(_0x57cd3a + 0x2, _0x5a780c + 0x2, _0x20416f - 0x4, 0x1, "#4578d4"), _0x1a5056(_0x4b85d4, _0x5db8f4, _0x5a780c + 0x4, "#fff"); } const _0x1124ca = _0x293629, _0x1ff1a5 = _0x38f8e0; function _0x4d20e9(_0x4b514e, _0x4f7734, _0xa1a6b, _0x363d92) { const _0x4a1188 = _0x2b91c3, _0x357582 = _0x2b91c3, _0x5c7d79 = parseInt(_0x363d92["slice"](0x1), 0x10), _0x5aed95 = ["#f1c59a", "#e6b48a", '#d9a878', "#f5d0aa"][_0x5c7d79 % 0x4], _0x1d6056 = ['#3363b4', "#e670a4", "#4ea972", "#eca460", "#f4f4f4", "#7d559c"][_0x5c7d79 % 0x6], _0x44d7bb = _0x363d92 === "#0cb954" ? "BÙM" : _0x363d92 === "#ffd84a" ? "VEO" : _0x363d92 === '#0cceaa' ? 'LÁ' : null, _0x8fc135 = _0x44d7bb === "BÙM" ? "#0cb954" : _0x44d7bb === "VEO" ? "#ffd84a" : _0x44d7bb === 'LÁ' ? "#0cceaa" : _0x1d6056; _0xa1a6b === "bike" ? (_0x367738(_0x4b514e + 0x5, _0x4f7734 - 0xf, 0x4, 0x6, _0x8fc135), _0x367738(_0x4b514e + 0x5, _0x4f7734 - 0xf, 0x4, 0x1, _0x22d22e(_0x8fc135, 1.3)), _0x367738(_0x4b514e + 0x9, _0x4f7734 - 0xd, 0x3, 0x1, _0x8fc135), _0x367738(_0x4b514e + 0x6, _0x4f7734 - 0x9, 0x3, 0x3, "#2e3444"), _0x367738(_0x4b514e + 0x6, _0x4f7734 - 0x13, 0x4, 0x4, _0x5aed95), _0x367738(_0x4b514e + 0x6, _0x4f7734 - 0x14, 0x4, 0x2, _0x5c7d79 % 0x3 ? '#242830' : '#ecc44e'), _0x310115(_0x4b514e + 0x9, _0x4f7734 - 0x11, "#242830"), _0x44d7bb && (_0x367738(_0x4b514e + 0x4, _0x4f7734 - 0x17, 0x8, 0x3, _0x8fc135), _0x310115(_0x4b514e + 0x7, _0x4f7734 - 0x16, _0x44d7bb === 'VEO' ? "#000" : "#fff"))) : (_0x367738(_0x4b514e + 0xc, _0x4f7734 - 0xc, 0x3, 0x1, "#1e1812"), _0x367738(_0x4b514e + 0xc, _0x4f7734 - 0xb, 0x3, 0x2, _0x5aed95), _0x367738(_0x4b514e + 0xb, _0x4f7734 - 0x9, 0x5, 0x1, _0x8fc135), _0x5c7d79 % 0x2 && (_0x367738(_0x4b514e + 0x14, _0x4f7734 - 0xc, 0x3, 0x1, "#1e1812"), _0x367738(_0x4b514e + 0x14, _0x4f7734 - 0xb, 0x3, 0x2, _0x5aed95), _0x367738(_0x4b514e + 0x13, _0x4f7734 - 0x9, 0x5, 0x1, "#e670a4")), _0x44d7bb === 'LÁ' && (_0x367738(_0x4b514e + 0xe, _0x4f7734 - 0x12, 0xa, 0x3, '#0cceaa'), _0x367738(_0x4b514e + 0xf, _0x4f7734 - 0x11, 0x8, 0x1, "#fff"))); } _0x293629 = (_0x288d33, _0x35ad93, _0x388728, _0x44faaa) => { _0x1124ca(_0x288d33, _0x35ad93, _0x388728, _0x44faaa), _0x4d20e9(_0x288d33, _0x35ad93, _0x388728, _0x44faaa); }, _0x38f8e0 = (_0x20bdf7, _0x2dfdcd, _0x460bd5, _0x4fc0ee) => { const _0x294b9d = _0x2b91c3, _0x3b245a = _0x2b91c3; if (_0x460bd5 === "deliv")
+} const _0x58bcb5 = document["getElementById"]('c'), _0x4cd425 = _0x58bcb5["getContext"]('2d'); function _0xaeaaeb() { const _0x2b76f7 = _0x2b91c3, _0x598a71 = _0x2b91c3, _0x1664e8 = _0x58bcb5["getBoundingClientRect"](), _0x163522 = Math["min"](window["devicePixelRatio"] || 0x1, 0x2), _0x48416a = _0x396f63 * Math["max"](0x1, Math["min"](0x6, Math["round"](_0x1664e8["width"] * _0x163522 / _0x396f63))); _0x58bcb5["width"] = _0x48416a, _0x58bcb5['height'] = Math['round'](_0x48416a * _0x45a182 / _0x396f63); } function _0x2ca9bc() { const _0x77f6e1 = _0x2b91c3, _0x3d087c = _0x2b91c3; _0x4cd425["imageSmoothingEnabled"] = ![], _0x4cd425["drawImage"](_0x47f542, 0x0, 0x0, _0x58bcb5["width"], _0x58bcb5["height"]), _0x5189ab["forEach"](_0x39a8f6 => _0x4c2314(..._0x39a8f6)), _0x49e905(), _0x4cd425["save"](), _0x4cd425["globalAlpha"] = 0.4, _0x4cd425["fillStyle"] = '#fff', _0x4cd425["shadowColor"] = "#000", _0x4cd425["shadowBlur"] = 0x3, _0x4cd425["font"] = Math['max'](0xa, _0x58bcb5["height"] / 0x30 | 0x0) + "px sans-serif", _0x4cd425["textAlign"] = "right", _0x4cd425['fillText']("© Hùng Anh", _0x58bcb5["width"] - 0x8, _0x58bcb5["height"] - 0x8), _0x4cd425["restore"](); } _0xaeaaeb(), addEventListener("resize", () => { _0xaeaaeb(), _0x3d898c['clear'](); }); function _0x5a4ad4(_0x57cd3a, _0x5a780c, _0x4b85d4) { const _0x4a7487 = _0x130719, _0x12ffe5 = _0x130719, _0x20416f = _0x141304(_0x4b85d4) + 0xa, _0x5db8f4 = _0x57cd3a + (_0x20416f >> 0x1); _0x367738(_0x5db8f4, _0x5a780c + 0xc, 0x2, 0xac - _0x5a780c - 0xc, "#2f3440"), _0x367738(_0x5db8f4 - 0x1, 0xab, 0x4, 0x2, '#242832'), _0x367738(_0x57cd3a, _0x5a780c, _0x20416f, 0xc, "#ecf2ff"), _0x367738(_0x57cd3a + 0x1, _0x5a780c + 0x1, _0x20416f - 0x2, 0xa, "#2558b8"), _0x367738(_0x57cd3a + 0x2, _0x5a780c + 0x2, _0x20416f - 0x4, 0x1, "#4578d4"), _0x1a5056(_0x4b85d4, _0x5db8f4, _0x5a780c + 0x4, "#fff"); } const _0x1124ca = _0x293629, _0x1ff1a5 = _0x38f8e0; function _0x4d20e9(_0x4b514e, _0x4f7734, _0xa1a6b, _0x363d92) { const _0x4a1188 = _0x2b91c3, _0x357582 = _0x2b91c3, _0x5c7d79 = parseInt(_0x363d92["slice"](0x1), 0x10), _0x5aed95 = ["#f1c59a", "#e6b48a", '#d9a878', "#f5d0aa"][_0x5c7d79 % 0x4], _0x1d6056 = ['#3363b4', "#e670a4", "#4ea972", "#eca460", "#f4f4f4", "#7d559c"][_0x5c7d79 % 0x6], _0x44d7bb = _0x363d92 === "#0cb954" ? "BÙM" : _0x363d92 === "#ffd84a" ? "VEO" : _0x363d92 === '#0cceaa' ? 'LÁ' : null, _0x8fc135 = _0x44d7bb === "BÙM" ? "#0cb954" : _0x44d7bb === "VEO" ? "#ffd84a" : _0x44d7bb === 'LÁ' ? "#0cceaa" : _0x1d6056; _0xa1a6b === "bike" ? (_0x367738(_0x4b514e + 0x5, _0x4f7734 - 0xf, 0x4, 0x6, _0x8fc135), _0x367738(_0x4b514e + 0x5, _0x4f7734 - 0xf, 0x4, 0x1, _0x22d22e(_0x8fc135, 1.3)), _0x367738(_0x4b514e + 0x9, _0x4f7734 - 0xd, 0x3, 0x1, _0x8fc135), _0x367738(_0x4b514e + 0x6, _0x4f7734 - 0x9, 0x3, 0x3, "#2e3444"), _0x367738(_0x4b514e + 0x6, _0x4f7734 - 0x13, 0x4, 0x4, _0x5aed95), _0x367738(_0x4b514e + 0x6, _0x4f7734 - 0x14, 0x4, 0x2, _0x5c7d79 % 0x3 ? '#242830' : '#ecc44e'), _0x310115(_0x4b514e + 0x9, _0x4f7734 - 0x11, "#242830"), _0x44d7bb && (_0x367738(_0x4b514e + 0x4, _0x4f7734 - 0x17, 0x8, 0x3, _0x8fc135), _0x310115(_0x4b514e + 0x7, _0x4f7734 - 0x16, _0x44d7bb === 'VEO' ? "#000" : "#fff"))) : (_0x367738(_0x4b514e + 0xc, _0x4f7734 - 0xc, 0x3, 0x1, "#1e1812"), _0x367738(_0x4b514e + 0xc, _0x4f7734 - 0xb, 0x3, 0x2, _0x5aed95), _0x367738(_0x4b514e + 0xb, _0x4f7734 - 0x9, 0x5, 0x1, _0x8fc135), _0x5c7d79 % 0x2 && (_0x367738(_0x4b514e + 0x14, _0x4f7734 - 0xc, 0x3, 0x1, "#1e1812"), _0x367738(_0x4b514e + 0x14, _0x4f7734 - 0xb, 0x3, 0x2, _0x5aed95), _0x367738(_0x4b514e + 0x13, _0x4f7734 - 0x9, 0x5, 0x1, "#e670a4")), _0x44d7bb === 'LÁ' && (_0x367738(_0x4b514e + 0xe, _0x4f7734 - 0x12, 0xa, 0x3, '#0cceaa'), _0x367738(_0x4b514e + 0xf, _0x4f7734 - 0x11, 0x8, 0x1, "#fff"))); } _0x293629 = (_0x288d33, _0x35ad93, _0x388728, _0x44faaa) => { _0x1124ca(_0x288d33, _0x35ad93, _0x388728, _0x44faaa), _0x4d20e9(_0x288d33, _0x35ad93, _0x388728, _0x44faaa); }, _0x38f8e0 = (_0x20bdf7, _0x2dfdcd, _0x460bd5, _0x4fc0ee) => { const _0x294b9d = _0x2b91c3, _0x3b245a = _0x2b91c3; if (_0x460bd5 === "deliv")
     return _0x367738(_0x20bdf7 - 0x1, _0x2dfdcd - 0xf, 0x6, 0x6, "#0cb954"), _0x367738(_0x20bdf7 - 0x1, _0x2dfdcd - 0xf, 0x6, 0x1, "#6adc94"), _0x367738(_0x20bdf7, _0x2dfdcd - 0xc, 0x4, 0x1, '#fff'), _0x293629(_0x20bdf7, _0x2dfdcd, 'bike', _0x4fc0ee); _0x1ff1a5(_0x20bdf7, _0x2dfdcd, _0x460bd5, _0x4fc0ee); if (_0x460bd5 === "bus") {
     for (let _0x509e55 = 0x0; _0x509e55 < 0x5; _0x509e55++)
         _0x509e55 !== 0x2 && (_0x367738(_0x20bdf7 + 0x5 + _0x509e55 * 0x9, _0x2dfdcd - 0xf, 0x3, 0x1, "#2e1e14"), _0x367738(_0x20bdf7 + 0x5 + _0x509e55 * 0x9, _0x2dfdcd - 0xe, 0x3, 0x2, "#e6b48a"));
@@ -2814,7 +2814,7 @@ catch (_0x6fcb75) {
         for (let _0x3c052b = 0x92; _0x3c052b < _0x45a182; _0x3c052b++) {
             _0x310115(_0x5bbfe7 + (_0x35a1a5 - 0x5) * (_0x3c052b - 0x92) * 1.4 | 0x0, _0x3c052b, _0x22d22e(_0x20797a["floor2"], 0.7));
         }
-    } _0x36cbc6["globalAlpha"] = 0x1, _0x36cbc6["globalAlpha"] = 0.13; for (let _0x38fbb2 = 0x0; _0x38fbb2 < 0x5; _0x38fbb2++)
+    } _0x36cbc6["globalAlpha"] = 0x1, _0x36cbc6["globalAlpha"] = 0.035; for (let _0x38fbb2 = 0x0; _0x38fbb2 < 0x5; _0x38fbb2++)
         _0xb81ff0(0x24 + _0x38fbb2 * 0x48, _0x45a182 - 0x14, 0x14, _0x20797a["acc"]); _0x36cbc6["globalAlpha"] = 0x1, _0x367738(0x0, _0x45a182 - 0x3, _0x396f63, 0x3, _0x22d22e(_0x20797a['floor2'], 0.8)), _0x367738(0x0, _0x45a182 - 0x3, _0x396f63, 0x1, _0x22d22e(_0x20797a["floor2"], 1.2)); }), _0x1c6f0f; }
     function _0x180b28(_0x3566ef) { const _0x44de88 = _0x130719, _0x25c8c9 = _0x130719, _0x242460 = _0x291f10[_0x3566ef["style"]], _0x1933d2 = _0x5dd8b9(_0x3566ef), _0x4627d3 = { 'key': "cb_" + _0x3566ef['id'], 'cbShop': _0x3566ef['id'], 'shopTitle': _0x3566ef['n'], 'style': _0x3566ef["style"], 'title': _0x3566ef['n'], 'L': { 'sky': _0x3a6915, 'town': _0x1933d2, 'wire': _0x3a6915, 'fg': _0x3a6915 }, 'B': [], 'names': [], 'clouds': [], 'wins': [], 'flags': [], 'traffic': [], 'part': [], 'com': [], 'doors': [], 'next': {}, 'edoor': 0x0, 'fx': _0x2243bb => { _0x3dc369(_0x2243bb); } }, _0x3b637f = new _0x2072a3(); _0x3b637f['b'] = { 'x0': 0x6, 'x1': 0x160, 'y0': 0x9e, 'y1': 0xc6 }, _0x3b637f["add"](0x14, 0x5a, 0x64, 0xa), _0x3b637f['add'](0x8c, 0x5a, 0x50, 0xa), _0x3b637f['add'](0xf0, 0x5a, 0x64, 0xa), _0x3b637f["add"](0x8c, 0x70, 0x50, 0x1a), _0x3b637f['add'](0x4, 0x84, 0x12, 0xe), _0x3b637f["add"](0x152, 0x88, 0x12, 0xa), _0x4627d3["col"] = _0x3b637f; const _0x1a424c = new _0x4cb693({ 'role': "apron", 'name': "NHÂN VIÊN " + _0x3566ef['id']["toUpperCase"](), 'x': 0xb4, 'y': 0x6a, 'seed': 0x320 + _0x3566ef['id']["length"], 'dir': "down", 'talk': 'x', 'qr': "cashier", 'zt': "THU NGÂN", 'col': _0x3b637f, 'ai': new _0x225da4(0x320 + _0x3566ef['id']["length"], ["INTERACT", 'IDLE', "TALK"]) }), _0x5a63a3 = new _0x4cb693({ 'role': "casual", 'name': "KHÁCH", 'x': 0x50, 'y': 0xaa, 'seed': 0x334 + _0x3566ef['id']["length"], 'dir': "down", 'talk': 'x', 'qr': 'guest', 'zt': "KHÁCH", 'col': _0x3b637f, 'ai': new _0x2c83a0([[0x50, 0xaa], [0xf0, 0xaa], [0x8c, 0xaf]], 0x334 + _0x3566ef['id']["length"], 0x0) }); return _0x4627d3["npcs"] = [_0x1a424c, _0x5a63a3], _0x4627d3['static'] = [], _0x4627d3["static"]["push"]({ 'y': 0x6d, 'd': () => { const _0x18a784 = _0x25c8c9, _0x4f8ff2 = _0x25c8c9, _0x412b8f = _0x4627d3["npcs"][0x0], _0x33b1b4 = Math["round"](Math["sin"](_0x3a6876["time"] * 0x6) * 0x2); _0x367738(_0x412b8f['x'] - 0x4, _0x412b8f['y'] - 0x2e + _0x33b1b4, 0x8, 0xa, '#d84040'), _0x367738(_0x412b8f['x'] - 0x4, _0x412b8f['y'] - 0x2e + _0x33b1b4, 0x8, 0x1, "#ff8a70"), _0xbaf106('$', _0x412b8f['x'] - 0x2, _0x412b8f['y'] - 0x2c + _0x33b1b4, "#fff"); } }), _0x4627d3["static"]["push"]({ 'y': 0x96, 'd': () => { const _0x19ca1f = _0x44de88, _0x472552 = _0x44de88, _0x3a122b = Math["round"](Math["sin"](_0x3a6876["time"] * 0x5) * 0x2); _0x3cc83c(0xc, 0x5a + _0x3a122b, ["11111", "01110", "00100"], ["#f2c46b"]), _0x1a5056("EXIT", 0x10, 0x54 + _0x3a122b, "#f2c46b"); } }), _0x4627d3["static"]["push"]({ 'y': 0x96, 'd': () => { const _0x5bf929 = _0x25c8c9, _0x2b8bc1 = _0x25c8c9, _0x255e75 = _0x4627d3["edoor"]; _0x367738(0x6, 0x68, 0x14, 0x2a, "#d3e6f5"), _0x367738(0x6, 0x68, Math["round"](0x14 * (0x1 - _0x255e75)), 0x2a, "#7e4e28"); if (_0x255e75 < 0.9)
             _0x367738(0x16, 0x7e, 0x2, 0x2, "#ecc468"); } }), _0x4627d3["static"]["push"]({ 'y': 0x8d, 'd': () => { const _0x28faef = _0x44de88, _0x4ce26b = _0x44de88, _0x416e56 = ['GIẢM\x2020%', 'MUA\x203\x20TẶNG\x201', "TÍCH ĐIỂM", "FREESHIP"][Math["floor"](_0x3a6876["time"] / 0x2) % 0x4]; _0x367738(0x94, 0x78, 0x40, 0xa, "#1a2033"), _0x367738(0x94, 0x78, 0x40, 0x1, _0x242460['acc']), _0x367738(0x94, 0x81, 0x40, 0x1, _0x242460['acc']), _0x1a5056(_0x416e56, 0xb4, 0x7a, _0x242460["acc"]); } }), _0x4627d3["static"]["push"]({ 'y': 0x8c, 'd': () => _0x2807cc(0x8c, 0x70, 0x50, _0x242460["acc"]) }), _0x4627d3["static"]["push"]({ 'y': 0x384, 'd': () => { const _0x125189 = _0x44de88, _0x321683 = _0x44de88; _0x4627d3["npcs"]["forEach"](_0x1acfe4 => _0x563c4b(_0x1acfe4['x'], _0x1acfe4['y'], 0x6)); } }), _0x4627d3; }
@@ -3959,7 +3959,18 @@ function facBG(m,k){var c=m.L.town.getContext('2d'),R=function(o,x,y,w,h){c.fill
  R(T[1],0,120,360,26);R('#00000025',0,120,360,1);for(x=0;x<360;x+=8)R(x/8%2?'#23262d':'#f2c230',x,142,4,4);
  R('#2f8f5a',156,58,34,18);R('#fff',171,61,4,12);R('#fff',167,65,12,4);R('#f4f0e6',330,56,14,14);R('#23262d',336,58,1,6);R('#23262d',336,63,5,1);
  R('#6d737d',0,146,360,57);for(y=146,i=0;y<203;y+=14,i++){R('#5f6570',0,y,360,1);for(x=i%2*14;x<360;x+=28)R('#5f6570',x,y,1,14)}
- for(x=0;x<360;x+=12){R('#e8c040',x,154,7,1);R('#e8c040',x,201,7,1)}}
+ for(x=0;x<360;x+=12){R('#e8c040',x,154,7,1);R('#e8c040',x,201,7,1)}
+ var hs=function(i){var v=Math.sin(i*127.1+311.7)*43758.5453;return v-Math.floor(v)};
+ R('#454b57',0,16,360,3);R('#2b2f39',0,19,360,1);R('#6a7282',0,16,360,1);
+ for(x=0;x<360;x+=60){R('#343a46',x,16,4,9);R('#6a7282',x,16,1,9);R('#232730',x+3,16,1,9);R('#232730',x,25,4,1)}
+ for(x=0;x<360;x+=72){R('#ffffff22',x+1,27,1,92);R('#00000030',x+5,27,1,92)}
+ R('#53667d',0,104,360,3);R('#a4bad2',0,104,360,1);R('#2c3746',0,107,360,1);R('#00000020',0,108,360,2);
+ for(x=18;x<360;x+=48){R('#7d91aa',x,102,3,7);R('#c4d4e6',x,102,1,7);R('#2c3746',x+2,102,1,7)}
+ R('#00000018',0,112,360,8);R('#ffffff14',0,120,360,1);
+ for(x=0;x<360;x+=40){R('#3b414d',x+8,34,10,4);for(y=0;y<3;y++)R('#1d2028',x+9,35+y,8,1)}
+ for(y=146,i=0;y<203;y+=14,i++)for(x=i%2*14;x<360;x+=28){var q=hs(x*3+y);R(q>.72?'#ffffff12':q<.24?'#00000016':'#00000000',x+1,y+1,27,13);R('#ffffff10',x+1,y+1,27,1)}
+ for(i=0;i<7;i++){var ox=hs(i+4)*330+10,oy=162+hs(i+9)*34;R('#00000018',ox,oy,10+hs(i)*12|0,2);R('#00000010',ox+2,oy+2,6,1)}
+ [28,102,176,250,324].forEach(function(lx){R('#ffffff10',lx-16,176,32,1);R('#ffffff0c',lx-10,178,20,1)})}
 function fDec(m,k){var L=LAY[k]||[];facBG(m,k);m.static.push({y:148,d:function(){var t=G().time;L.forEach(function(a){PT[a[0]](a[1],a[2],t)})}});
  m.static.push({y:160,d:function(){var t=G().time,d=Math.cos(t*.35)>0?1:-1,fx=262+Math.round((Math.sin(t*.35)+1)/2*70);
   if(k=='cb_fk'){pallet(30,160,2,'#c8924a');pallet(70,160,1,'#e4e0d4');pallet(250,160,2,'#e4e0d4')}else{pallet(8,160,1,'#c8924a');pallet(200,160,1,'#e4e0d4');drum(246,160,'#3a7ac8');drum(252,160,'#e0362c')}
@@ -3976,6 +3987,14 @@ var FW=function(r,n,x,y,x2,sd,tk){return{role:r,name:n,x:x,y:y,seed:sd,pts:[[x,y
  FNS={cb_fac:[FW('apron','QUẢN ĐỐC',120,172,150,911,'factory_pm'),FW('casual','KỸ SƯ',70,178,96,912),FW('dev','KỸ THUẬT',34,186,56,913),FW('pm','QUẢN LÝ',172,186,198,914,'pm'),FW('hr','NHÂN SỰ',312,186,342,915,'hr'),FW('accountant','KẾ TOÁN',208,188,226,916),FW('apron','THỦ KHO',284,170,306,917),FW('marketing','KCS',230,172,246,918),FW('hoodie','CÔNG NHÂN',100,192,140,919),FW('casual','TỔ TRƯỞNG',250,192,280,920)],
  cb_fa:[FW('hoodie','CÔNG NHÂN',60,176,150,921),FW('casual','KỸ SƯ',200,184,260,922)],cb_fc:[FW('hoodie','CÔNG NHÂN',90,176,180,923),FW('apron','TỔ TRƯỞNG',230,184,300,924)],cb_fk:[FW('apron','THỦ KHO',120,176,200,925),FW('hoodie','CÔNG NHÂN',40,186,100,926)]},
  SN={cb_super:[FW('apron','NHÂN VIÊN KỆ',40,176,110,931),FW('casual','KHÁCH THÂN THIẾT',240,172,300,932)],cb_mart:[FW('marketing','THU NGÂN',150,166,215,933),FW('pm','NHÀ PHÂN PHỐI',40,178,100,934),FW('apron','BÁN HÀNG',235,170,270,935),FW('designer','SINH VIÊN',100,184,140,936),FW('chef','BẾP TRƯỞNG',280,176,320,937),FW('casual','DU KHÁCH',20,190,60,938),FW('pm','SHIPPER',310,186,346,939)]};
+function FP(r,n,pts,sd,tk){return{role:r,name:n,x:pts[0][0],y:pts[0][1],seed:sd,pts:pts,talk:tk}}
+var MORE={cb_fac:[FP('hoodie','CÔNG NHÂN 2',[[150,178],[196,178],[196,194],[150,194]],941),FP('apron','ĐÓNG GÓI',[[196,170],[236,170]],942),FP('pm','BẢO VỆ',[[30,170],[30,194]],943),FP('casual','ĐIỀU PHỐI',[[260,180],[300,180],[300,194]],944),FP('dev','GIÁM SÁT',[[60,196],[130,196]],945),FP('hoodie','CÔNG NHÂN 3',[[320,172],[320,196],[270,196]],946)],
+ cb_fa:[FP('apron','TỔ TRƯỞNG A',[[110,172],[170,172]],951),FP('dev','KỸ THUẬT A',[[40,194],[120,194],[120,176]],952),FP('hoodie','CÔNG NHÂN 2',[[230,176],[290,176],[290,194],[230,194]],953),FP('hoodie','CÔNG NHÂN 3',[[160,190],[220,190]],954),FP('casual','QC',[[300,170],[340,170]],955),FP('pm','BẢO VỆ',[[24,168],[24,194]],956)],
+ cb_fc:[FP('apron','THỢ MÁY',[[40,172],[70,172]],961),FP('dev','KỸ THUẬT C',[[130,190],[200,190],[200,174]],962),FP('hoodie','CÔNG NHÂN 2',[[260,176],[320,176],[320,194],[260,194]],963),FP('hoodie','CÔNG NHÂN 3',[[20,194],[100,194]],964),FP('casual','QC',[[170,170],[210,170]],965),FP('pm','BẢO VỆ',[[340,170],[340,194]],966)],
+ cb_fk:[FP('apron','THỦ KHO 2',[[160,170],[230,170]],971),FP('hoodie','BỐC XẾP',[[80,190],[150,190],[150,176]],972),FP('hoodie','BỐC XẾP 2',[[250,180],[320,180],[320,196],[250,196]],973),FP('casual','ĐIỀU PHỐI',[[20,174],[60,174]],974),FP('pm','BẢO VỆ',[[340,174],[340,196]],975),FP('dev','KIỂM KÊ',[[100,196],[200,196]],976)],
+ cb_super:[FP('casual','KHÁCH 1',[[20,190],[120,190]],981),FP('designer','KHÁCH 2',[[200,184],[330,184]],982),FP('hoodie','KHÁCH 3',[[110,172],[210,172],[210,194]],983),FP('chef','KHÁCH 4',[[250,196],[330,196]],984),FP('pm','BẢO VỆ',[[24,168],[24,194]],985),FP('marketing','KHÁCH 5',[[60,178],[100,178],[100,194]],986)],
+ cb_mart:[FP('hoodie','KHÁCH A',[[60,192],[140,192]],991),FP('casual','KHÁCH B',[[200,190],[300,190],[300,178]],992),FP('designer','KHÁCH C',[[170,180],[230,180]],993),FP('apron','BỐC HÀNG',[[320,194],[250,194]],994)]};
+Object.keys(MORE).forEach(function(k){var t=/^cb_f/.test(k)?FNS:SN;t[k]=(t[k]||[]).concat(MORE[k])});
 function addN(m,a,fac){var ref=m.npcs.filter(function(n){return n.name=='KHÁCH'})[0]||m.npcs.filter(function(n){return n.ai&&n.ai.pts})[0];if(!ref)return;a.forEach(function(d){if(m.npcs.some(function(n){return n.name==d.name}))return;
  var o=Object.assign({col:m.col,speed:ref.speed,dir:'right',talk:fac?'factory_worker':null},d);if(!o.talk)o.talk=fac?'factory_worker':null;try{o.ai=new ref.ai.constructor(d.pts||[],d.seed,0)}catch(e){o.ai=null}m.npcs.push(new ref.constructor(o))});if(fac)m.npcs=m.npcs.filter(function(n){return n!==ref&&n.qr!='cashier'})}
 function dec(g){var m=g.map;if(!m||m._c2)return;if(LAY[m.key]){m._c2=1;m.static=m.static.filter(function(x){return x.y!=109&&x.y!=140&&x.y!=141});fDec(m,m.key);addN(m,FNS[m.key],1)}else if(m.key==SU||m.key==MA){m._c2=1;shopDec(m,m.key);addN(m,SN[m.key])}}
@@ -3998,5 +4017,173 @@ setInterval(function(){try{
  hud()}catch(e){}},250);
 })();
 </script>
+<script id="npcdlg">
+/* NPC DIALOGUE v1 — lời thoại đa dạng theo vai, nhớ số lần trò chuyện, thân thiết tăng dần (không đổi chỉ số game) */
+(function(){
+var X=window.__X;if(!X)return;
+var T=X.T,S=X.S,G=function(){try{return window.__gg()}catch(e){return null}};
+var rd=function(n){return Math.floor(Math.random()*n)},pk=function(a){return a[rd(a.length)]};
+var MEM={};try{MEM=JSON.parse(localStorage.getItem('tvtd_npc')||'{}')||{}}catch(e){MEM={}}
+function save(){try{localStorage.setItem('tvtd_npc',JSON.stringify(MEM))}catch(e){}}
+/* ---- kho câu thoại theo vai ---- */
+var P={
+worker:{hi:['Chào sếp! Em mới vào ca, chưa kịp quen hết máy móc.','Sếp ghé xưởng ạ? Anh em đang tăng tốc cho kịp đơn.'],
+ ln:['Máy chạy êm thì nhàn, máy kêu là cả tổ cuống lên.','Ca đêm lạnh nhưng có tăng ca thì anh em vẫn vui.','Nhờ có dây chuyền mới, em đỡ phải bê vác nhiều hơn.','Cuối tháng đơn dồn về, ai cũng chạy như con thoi.','Em học được nghề nhanh vì tổ trưởng chỉ cầm tay chỉ việc.','Giữ đồ bảo hộ đầy đủ là quy tắc số một ở đây, sếp ạ.','Hôm qua lô hàng bị trả về một phần, cả tổ phải làm lại.','Nghe nói công ty sắp mở rộng, anh em ai cũng mong có thêm ca.'],
+ fam:['Sếp nhớ mặt em rồi hả? Vui quá, em sẽ làm tốt hơn.','Em nói thật, nhà máy mình tốt hơn chỗ cũ em làm nhiều.','Có việc gì nặng sếp cứ gọi, anh em sẵn sàng.'],
+ bff:['Em dám nói thẳng với sếp: ca đêm cần thêm người đứng máy.','Anh em hay bảo sếp là người nghe được tiếng nói ở xưởng.']},
+lead:{hi:['Tôi phụ trách điều tổ này. Có gì sếp cứ hỏi.','Chào sếp, tôi đang kiểm lại phân ca hôm nay.'],
+ ln:['Phân ca hợp lý thì năng suất tăng mà không cần ép ai.','Tôi ghi lại mọi sự cố trong sổ ca, sau này truy nguyên rất dễ.','Máy dừng ngắn mà không ghi lại là chỗ quỹ hay soi nhất.','Tổ nào cũng cần một người dám báo lỗi sớm.','Giao ca mà không bàn giao rõ là sáng mai sai ngay.','Tôi đã nhắc anh em: số liệu ghi thế nào thì phải đúng thế.','Muốn giữ người giỏi thì phải trả lương và ghi nhận đúng lúc.','Có hôm kẹt đơn gấp, tôi phải dời cả ca nghỉ của tổ.'],
+ fam:['Sếp nhớ chuyện sổ ca tôi kể chứ? Giờ tổ tôi làm đều tay rồi.','Làm lâu mới thấy: minh bạch với anh em thì họ bảo vệ mình lại.','Tôi tin sếp sẽ không đổ lỗi lên đầu tổ khi có chuyện.'],
+ bff:['Nói riêng với sếp: đừng tin báo cáo nếu chưa tự đi một vòng xưởng.','Tôi giữ bản ghi gốc của mọi ca, sếp cần lúc nào tôi đưa ngay.']},
+tech:{hi:['Tôi lo phần kỹ thuật, máy nào trục trặc là gọi tôi.','Chào sếp, tôi đang hiệu chuẩn lại thiết bị đo.'],
+ ln:['Công suất thiết kế khác công suất thực đo, đừng nhầm hai con số.','Bảo trì định kỳ rẻ hơn rất nhiều so với dừng máy đột xuất.','Tôi thích số đo thật hơn lời đoán, dù số đo thật hay làm người ta nản.','Lô này đạt chuẩn, nhưng biên độ sai số hơi sát.','Máy mới mạnh nhưng cần người vận hành hiểu nó mới có ích.','Mỗi lỗi tôi đều ghi nguyên nhân gốc, không chỉ ghi triệu chứng.','Kiểm tra chất lượng sớm rẻ hơn thu hồi hàng nhiều lần.','Nhà đầu tư thích hỏi chuyện kỹ thuật, tốt nhất là có số đo thật để đưa ra.'],
+ fam:['Sếp hỏi nhiều về số đo thật, tôi mến kiểu làm việc này.','Tôi đã làm bản điều chỉnh, chỉ chờ sếp chốt là chạy.','Dữ liệu sạch giúp mọi quyết định nhẹ đi một nửa.'],
+ bff:['Nói thật với sếp: có vài thông số trên báo cáo cũ hơi lạc quan.','Tôi giữ riêng một bộ số đo thật, sếp cần để giải trình tôi đưa.']},
+wh:{hi:['Kho này tôi nắm từng pallet, sếp muốn kiểm gì cứ nói.','Chào sếp, tôi đang đối chiếu phiếu nhập với số đếm.'],
+ ln:['Sổ kho khớp hay không chỉ biết khi đếm thật, không phải nhìn phiếu.','Hao hụt nhỏ mà không ai để ý thì cuối quý thành khoản lớn.','Phiếu nhập ca đêm hay bị nhập trễ, tôi phải nhắc mỗi sáng.','Xếp hàng cho gọn thì lấy nhanh, kiểm kê cũng nhanh.','Hàng sát hạn phải xuất trước, nếu không là tự chôn tiền.','Mỗi pallet đều có nhãn, đứa nào gỡ nhãn là tôi nhắc liền.','Xe nâng chạy đúng làn, đừng đứng sát lối đi nhé sếp.','Quỹ mà xuống kiểm kho thì chỉ cần mở đúng một ô, sai là soi tiếp.'],
+ fam:['Sếp quay lại là tôi mừng, kho minh bạch thì tôi ngủ ngon.','Tôi lập thêm biên bản điều chỉnh, ghi rõ từng lô chênh lệch.','Sếp mà hỏi tôi, tôi nói đúng số đếm, không làm đẹp.'],
+ bff:['Riêng với sếp: có một lô tôi chưa kịp lập biên bản, nên xử lý trước khi quỹ tới.','Kho của sếp sạch sổ, tôi dám nói câu đó.']},
+acct:{hi:['Tôi phụ trách sổ sách, mọi con số đều có chứng từ.','Chào sếp, hóa đơn đầu vào tháng này tôi vừa đối chiếu xong.'],
+ ln:['Hóa đơn ghi sai kỳ là tôi phải điều chỉnh cả loạt.','Giá vốn trên sổ mà thấp hơn hóa đơn thì quỹ hỏi ngay.','Số đẹp mà không có chứng từ thì không đáng tin.','Cuối quý là lúc kế toán thức khuya nhiều nhất.','Dòng tiền quan trọng hơn lợi nhuận trên giấy, sếp nhớ nhé.','Tôi lưu bản sao mọi chứng từ, kiểm toán đến cũng không sợ.','Chi phí nhỏ không kiểm soát thì cộng lại thành khoản lớn.','Thuế thì tôi luôn kê đúng, đỡ phiền về sau.'],
+ fam:['Sếp hỏi về số liệu là tôi thấy yên tâm, mình cùng chiến tuyến.','Tôi đã chuẩn bị sẵn bộ hồ sơ giải trình theo ý sếp.','Người làm sổ sách sợ nhất là lãnh đạo muốn số đẹp hơn số thật.'],
+ bff:['Nói nhỏ thôi: sổ sạch thì ngủ ngon, đừng bao giờ sửa số vì áp lực.','Tôi tin sếp, nên tôi cho sếp xem cả những dòng chưa đẹp.']},
+guard:{hi:['Tôi trực cổng và tuần tra khu này. Mọi thứ đều ổn, sếp.','Chào sếp, tôi vừa đi một vòng kiểm tra khu vực.'],
+ ln:['Đứng gác lâu, tôi biết giờ nào người ra vào đông nhất.','Có khách lạ vào là tôi phải hỏi giấy tờ, xin sếp thông cảm.','Hôm qua đèn khu đó chập chờn, tôi đã báo kỹ thuật rồi.','Đêm ở đây yên tĩnh, chỉ nghe tiếng máy chạy.','Mọi lối thoát hiểm tôi kiểm tra mỗi ca, không bỏ sót.','Người ra vào đều phải ghi sổ, không ngoại lệ nhé sếp.','Tuần trước có xe giao hàng đỗ sai chỗ, tôi nhắc ngay.','Làm bảo vệ nhàn mà không nhàn, phải để mắt mọi nơi.'],
+ fam:['Sếp hay ghé nên tôi nhớ mặt rồi, khỏi hỏi giấy nữa.','Khu này sếp cứ yên tâm, có tôi canh.','Tôi thích chỗ làm này, người ta tôn trọng nghề bảo vệ.'],
+ bff:['Giữa sếp với tôi: để ý lối cửa sau giờ nghỉ trưa, ít người qua lại.','Nếu có gì bất thường tôi sẽ báo sếp đầu tiên.']},
+shop:{hi:['Chào sếp! Cửa hàng mới nhập hàng, sếp xem thử nhé.','Dạ chào sếp, hôm nay có chương trình khuyến mãi đấy ạ.'],
+ ln:['Hàng bán chạy nhất là loại ở kệ giữa, khách cứ hỏi là lấy.','Cuối tuần khách đông gấp đôi, nhân viên phải chạy liên tục.','Giá niêm yết rõ ràng thì khách mới yên tâm mua lâu dài.','Em xếp hàng theo màu cho khách dễ tìm, đỡ phải hỏi.','Nhập hàng sát hạn dùng là phải giảm giá ngay, không để tồn.','Khách quen quan trọng hơn khách lẻ, mình phải nhớ mặt họ.','Giao hàng trễ một ngày là cả kệ trống, em lo lắm.','Thẻ tích điểm giúp khách quay lại, em thấy hiệu quả thật.'],
+ fam:['Sếp ghé thường xuyên, em nhớ mặt rồi, mừng lắm.','Em đã sắp lại kệ theo gợi ý của sếp, khách mua nhiều hơn hẳn.','Có sếp xuống cửa hàng, nhân viên ai cũng thêm động lực.'],
+ bff:['Em nói riêng: khách hay hỏi một mặt hàng mình chưa có, nên nhập thêm.','Sổ bán hàng em ghi rõ từng ngày, sếp cần xem lúc nào cũng được.']},
+cust:{hi:['Chào anh/chị, em chỉ đi xem hàng thôi ạ.','Ở đây đông thật, em phải đợi lâu mới tới lượt.'],
+ ln:['Em hay mua ở đây vì giá niêm yết rõ ràng, không bị hớ.','Hôm nay có đợt giảm giá, em phải tranh thủ mua nhiều chút.','Nhân viên ở đây thân thiện, em thích quay lại.','Em đi tìm một món mà tìm mãi chưa thấy, chắc hết hàng rồi.','Hàng ở đây lúc nào cũng mới, em thấy yên tâm hơn chợ.','Quầy thanh toán hơi đông, nhưng thu ngân làm nhanh lắm.','Em là sinh viên nên hay mua đồ giảm giá, tiết kiệm được kha khá.','Giá tăng nhẹ là em để ý ngay, mua hàng phải tính từng đồng.'],
+ fam:['Ơ anh/chị lại đây hả? Em thấy cửa hàng này ngày càng đông khách.','Em giới thiệu bạn bè đến đây mua rồi, họ cũng thích.','Em thấy chỗ này làm ăn tử tế, em sẽ ủng hộ lâu dài.'],
+ bff:['Em nói thật: khách hàng nhớ nhất là lần mình bị đối xử tử tế.','Em chưa thấy cửa hàng nào giữ khách tốt bằng chỗ này.']}
+};
+var TIPS=['Trước khi quỹ tới, hãy tự đi kiểm tra số liệu thực tế một vòng.','Sổ ghi đẹp hơn thực tế sẽ bị soi đúng chỗ đó, nên giải trình trung thực.','Chênh lệch nhỏ mà minh bạch thì quỹ vẫn tin, còn che giấu thì mất hết.','Số đo thật trong tay giúp trả lời nhà đầu tư mà không phải đoán.','Hỏi đúng người sẽ tiết kiệm cả ngày kiểm tra, mỗi người nắm một mảng.','Giữ tiền mặt đủ vài tháng chi phí, đừng đốt hết khi chưa có vốn mới.','Nói chuyện với nhân viên thường xuyên cho bạn biết vấn đề trước khi nó lớn.'];
+var MOOD={lo:['Dạo này anh em hơi mệt, sếp để ý giúp nhé.','Không khí đang chùng, cần một chút động viên từ sếp.'],hi:['Dạo này ai cũng hăng hái, làm việc thấy nhẹ nhàng hẳn.','Anh em đang vui, năng suất cũng khá lên thấy rõ.']};
+function cat(n){var s=(n.name||'').toUpperCase();
+ if(/BẢO VỆ/.test(s))return'guard';
+ if(/KẾ TOÁN/.test(s))return'acct';
+ if(/THỦ KHO|KIỂM KÊ|ĐÓNG GÓI/.test(s))return'wh';
+ if(/KỸ SƯ|KỸ THUẬT|QC|KCS/.test(s))return'tech';
+ if(/TỔ TRƯỞNG|GIÁM SÁT|ĐIỀU PHỐI|QUẢN LÝ/.test(s))return'lead';
+ if(/CÔNG NHÂN|BỐC|THỢ/.test(s))return'worker';
+ if(/NHÂN VIÊN|BÁN HÀNG|THU NGÂN|PHÂN PHỐI|SHIPPER/.test(s))return'shop';
+ if(/KHÁCH|SINH VIÊN|DU KHÁCH|BẾP/.test(s))return'cust';
+ return/^cb_f/.test((G()&&G().map.key)||'')?'worker':'cust'}
+function tier(c){return c>=6?3:c>=3?2:c>=1?1:0}
+var TAG=['','','QUEN','THÂN'],LBL={worker:'CÔNG NHÂN',lead:'QUẢN LÝ CA',tech:'KỸ THUẬT',wh:'KHO VẬN',acct:'KẾ TOÁN',guard:'AN NINH',shop:'NHÂN VIÊN',cust:'KHÁCH HÀNG'};
+function pages(n,k){
+ var c=cat(n),p=P[c],m=MEM[k]||(MEM[k]={c:0,l:[]}),t=tier(m.c),out=[];
+ function fresh(a,key){var h=m['h_'+key]||[],ok=a.filter(function(x,i){return h.indexOf(i)<0});if(!ok.length){h=[];ok=a}
+  var x=pk(ok);h.push(a.indexOf(x));if(h.length>Math.min(4,a.length-1))h.shift();m['h_'+key]=h;return x}
+ if(m.c===0)out.push(pk(p.hi));
+ else if(t>=2&&Math.random()<.55)out.push(fresh(p.fam,'f'));
+ else out.push(fresh(p.ln,'l'));
+ var sel=Math.random(),mor=S.mor;
+ if(t>=3&&sel<.4)out.push(pk(p.bff));
+ else if(t>=3&&sel<.7)out.push('Mẹo nhỏ: '+fresh(TIPS,'t'));
+ else if(typeof mor==='number'&&mor<40&&sel<.5)out.push(pk(MOOD.lo));
+ else if(typeof mor==='number'&&mor>=75&&sel<.5)out.push(pk(MOOD.hi));
+ else out.push(fresh(p.ln,'l'));
+ if(m.c===2)out.push('(Mình thấy sếp ghé đây mấy lần rồi, coi như đã quen nhau nhé.)');
+ if(m.c===5)out.push('(Nói chuyện nhiều rồi, em coi sếp là người thân thiết ở đây.)');
+ m.c++;save();return out}
+function key(n){return((G()&&G().map.key)||'')+'|'+n.name}
+function bind(g){
+ if(!g||!g.map||!g.map.npcs||!g.dlg||!/^cb_/.test(g.map.key||''))return;
+ var d=g.dlg;
+ if(!d._rdw){var o=d.open;d.open=function(game,opts){try{
+   if(opts&&opts.topic==='rd'&&opts.npc){var n=opts.npc,k=key(n),m=MEM[k]||{c:0},t=tier(m.c);
+    opts.pages=pages(n,k);opts.title=LBL[cat(n)]+(TAG[t]?' · '+TAG[t]:'')}
+  }catch(e){}return o.call(this,game,opts)};d._rdw=1}
+ g.map.npcs.forEach(function(n){
+  if(!n||n._w||n._v||n.qr==='cashier')return;
+  var t=n.talk;if(t&&t!=='factory_worker'&&t!=='rd_gen')return;
+  n.talk='rd_gen'});
+}
+T.rd_gen={title:'NPC',topic:'rd',pages:['...']};
+setInterval(function(){try{bind(G())}catch(e){}},250);
+})();
+</script>
+
+<script id="paths">
+/* NHIỀU ĐƯỜNG ĐI v1 — chọn Sản xuất / Bán lẻ / Tài chính; tích điểm bằng cách gặp NPC khác nhau trong khu vực của đường đó; mỗi cấp mở thưởng */
+(function(){
+var X=window.__X;if(!X)return;var S=X.S,G=function(){try{return window.__gg()}catch(e){return null}};
+var PA={prod:{n:'SẢN XUẤT',i:'🏭',d:'Gặp nhân sự nhà máy, kho vận, khu công nghiệp.',z:/^cb_f|industrialZone/},
+ shop:{n:'BÁN LẺ',i:'🛒',d:'Gặp nhân viên và khách ở siêu thị, tạp hóa, phố Chùa Bộc.',z:/^cb_(super|mart)|chuaBocStreet/},
+ fin:{n:'TÀI CHÍNH',i:'💹',d:'Gặp chuyên gia và nhà đầu tư ở khu tài chính.',z:/financialDistrict|trieuHQ|lawFirm|kpmgAudit/}};
+var LV=[3,8,15],RW=[
+ {t:'Cấp 1: tinh thần đội ngũ +5',f:function(){S.mor=Math.min(100,(S.mor||0)+5)}},
+ {t:'Cấp 2: doanh thu +4%',f:function(){S.rev=Math.round(S.rev*104)/100}},
+ {t:'Cấp 3: định giá +3%',f:function(){S.val=Math.round(S.val*103)/100}}];
+var ST={p:null,xp:{prod:0,shop:0,fin:0},lv:{prod:0,shop:0,fin:0},seen:{}};
+try{var o=JSON.parse(localStorage.getItem('tvtd_path')||'null');if(o)ST=Object.assign(ST,o)}catch(e){}
+function save(){try{localStorage.setItem('tvtd_path',JSON.stringify(ST))}catch(e){}}
+function toast(t){var d=document.getElementById('toasts');if(!d)return;var e=document.createElement('div');e.className='toast';e.textContent=t;d.appendChild(e);setTimeout(function(){e.remove()},3500)}
+var B=document.createElement('button');B.id='pathbtn';B.style.cssText='position:fixed;top:max(8px,env(safe-area-inset-top));right:150px;z-index:15;font:16px VT323,monospace;background:#1b3a8a;color:#fff;border:2px solid #fff9;border-radius:10px;padding:2px 8px;cursor:pointer';
+var O=document.createElement('div');O.style.cssText='position:fixed;inset:0;z-index:30;display:none;background:rgba(8,14,30,.92);color:#fff;font:20px VT323,monospace;overflow:auto;padding:16px;text-align:center';
+document.body.appendChild(B);document.body.appendChild(O);
+function lab(){B.textContent=ST.p?PA[ST.p].i+' '+PA[ST.p].n+' Lv'+ST.lv[ST.p]:'🧭 CON ĐƯỜNG'}
+function show(){var h='<h2 style="margin:6px">CHỌN CON ĐƯỜNG KHỞI NGHIỆP</h2><p>Mỗi đường: gặp nhiều NPC khác nhau trong khu vực của nó để lên cấp và nhận thưởng.</p>';
+ Object.keys(PA).forEach(function(k){var a=PA[k],c=ST.p===k;h+='<div data-k="'+k+'" style="max-width:420px;margin:10px auto;padding:10px;border:3px solid '+(c?'#ffc93c':'#38d6ff')+';border-radius:10px;cursor:pointer;background:#14203c"><div style="font-size:28px">'+a.i+' '+a.n+(c?' ✔':'')+'</div><div>'+a.d+'</div><div style="color:#ffc93c">Điểm '+ST.xp[k]+' · Cấp '+ST.lv[k]+'/3</div></div>'});
+ h+='<p style="color:#9ab">Mốc cấp: '+LV.join(' / ')+' điểm. Thưởng: '+RW.map(function(r){return r.t}).join(' | ')+'</p><button id="pclose" style="font:22px VT323,monospace;padding:4px 16px">ĐÓNG</button>';
+ O.innerHTML=h;O.style.display='block';
+ O.querySelectorAll('[data-k]').forEach(function(e){e.onclick=function(){ST.p=e.dataset.k;save();lab();toast('Đã chọn đường '+PA[ST.p].n);show()}});
+ document.getElementById('pclose').onclick=function(){O.style.display='none'}}
+B.onclick=show;lab();
+function gain(n){var g=G();if(!ST.p||!g||!g.map)return;var a=PA[ST.p];if(!a.z.test(g.map.key))return;
+ var k=ST.p+'|'+g.map.key+'|'+n.name;if((ST.seen[k]||0)>=1)return;ST.seen[k]=1;ST.xp[ST.p]++;
+ var l=ST.lv[ST.p];if(l<3&&ST.xp[ST.p]>=LV[l]){ST.lv[ST.p]=l+1;try{RW[l].f()}catch(e){}toast(a.i+' '+a.n+' lên cấp '+(l+1)+'! '+RW[l].t)}
+ else toast(a.i+' +1 điểm '+a.n+' ('+ST.xp[ST.p]+')');save();lab()}
+setInterval(function(){try{var g=G();if(!g||!g.dlg)return;var d=g.dlg;if(d._pw)return;var o=d.open;
+ d.open=function(game,opts){try{if(opts&&opts.npc)gain(opts.npc)}catch(e){}return o.call(this,game,opts)};d._pw=1}catch(e){}},300);
+})();
+</script>
+
+<script id="itask">
+/* VIỆC TRONG NHÀ v1 — NPC trong nhà máy/cửa hàng giao việc nhỏ: chọn phương án, nhận kết quả (mỗi NPC 1 việc / 3 phút) */
+(function(){
+var X=window.__X;if(!X)return;var S=X.S,G=function(){try{return window.__gg()}catch(e){return null}};
+var rd=function(n){return Math.floor(Math.random()*n)};
+var K={m:'tinh thần',r:'doanh thu',v:'định giá',c:'tiền mặt'};
+var TK={
+worker:[{q:'Máy kêu lạ, tổ xin dừng 10 phút kiểm tra. Sếp quyết thế nào?',o:[['Cho dừng kiểm tra ngay',{m:3,r:-1},'Máy ổn lại, tổ yên tâm.'],['Chạy tiếp cho kịp đơn',{r:2,m:-4},'Kịp đơn nhưng tổ bất mãn.'],['Gọi kỹ thuật xuống xem',{m:2,c:-.02},'Xử lý đúng, tốn chút chi phí.']]},{q:'Công nhân xin đổi ca vì việc gia đình.',o:[['Đồng ý, tìm người thay',{m:4},'Anh em quý sếp hơn.'],['Từ chối vì thiếu người',{m:-3,r:1},'Giữ được ca nhưng mất lòng.']]}],
+lead:[{q:'Tổ trưởng đề xuất ghi lại mọi lần dừng máy. Sếp nghĩ sao?',o:[['Duyệt, ghi đầy đủ',{v:1,m:1},'Số liệu minh bạch, quỹ sẽ thích.'],['Chỉ ghi sự cố lớn',{r:1,v:-1},'Gọn hơn nhưng thiếu dữ liệu.'],['Bỏ qua, mất thời gian',{r:2,v:-2},'Nhanh trước mắt, rủi ro về sau.']]}],
+tech:[{q:'Kỹ thuật báo công suất thật thấp hơn báo cáo 8%.',o:[['Ghi số thật vào báo cáo',{v:2,r:-1},'Trung thực, dễ giải trình.'],['Giữ số cũ cho đẹp',{v:3,m:-2},'Số đẹp nhưng rủi ro bị lật.'],['Đầu tư bảo trì để nâng công suất',{c:-.03,r:2},'Tốn tiền, năng suất tăng.']]}],
+wh:[{q:'Thủ kho phát hiện lô hàng chênh 3% so với sổ.',o:[['Lập biên bản điều chỉnh',{v:2,m:1},'Minh bạch, sổ sạch.'],['Bỏ qua, chênh nhỏ',{v:-2},'Chênh nhỏ dễ thành lớn.'],['Kiểm kê lại toàn kho',{c:-.02,v:3},'Tốn công nhưng tin cậy cao.']]}],
+acct:[{q:'Kế toán nhắc hóa đơn đầu vào ghi sai kỳ.',o:[['Điều chỉnh ngay',{v:2},'Sổ chuẩn, tránh phạt.'],['Để cuối quý xử lý',{v:-1,c:.01},'Trì hoãn, rủi ro dồn lại.']]}],
+guard:[{q:'Bảo vệ báo có xe lạ xin vào kho.',o:[['Kiểm tra giấy tờ kỹ',{m:1,v:1},'An toàn, đúng quy trình.'],['Cho vào cho nhanh',{r:1,v:-2},'Nhanh nhưng thiếu kiểm soát.']]}],
+shop:[{q:'Hàng sắp hết hạn còn nhiều trên kệ. Xử lý sao?',o:[['Giảm giá nhanh xả hàng',{r:3,c:-.01},'Bán hết, ít hao hụt.'],['Giữ giá chờ khách',{r:-2},'Tồn kho tăng.'],['Tặng kèm khi mua combo',{r:2,m:1},'Khách vui, bán chạy hơn.']]}],
+cust:[{q:'Khách phàn nàn xếp hàng lâu ở quầy.',o:[['Mở thêm quầy thu ngân',{r:2,m:1,c:-.01},'Khách hài lòng, thêm chi phí.'],['Xin lỗi, tặng phiếu giảm giá',{r:1,v:1},'Giữ được khách quen.'],['Mặc kệ',{r:-3,v:-1},'Mất vài khách.']]}]};
+function cat(n){var s=(n.name||'').toUpperCase();
+ if(/BẢO VỆ/.test(s))return'guard';if(/KẾ TOÁN/.test(s))return'acct';if(/THỦ KHO|KIỂM KÊ|ĐÓNG GÓI/.test(s))return'wh';
+ if(/KỸ SƯ|KỸ THUẬT|QC|KCS/.test(s))return'tech';if(/TỔ TRƯỞNG|GIÁM SÁT|ĐIỀU PHỐI|QUẢN LÝ/.test(s))return'lead';
+ if(/CÔNG NHÂN|BỐC|THỢ/.test(s))return'worker';if(/NHÂN VIÊN|BÁN HÀNG|THU NGÂN|PHÂN PHỐI|SHIPPER/.test(s))return'shop';
+ if(/KHÁCH|SINH VIÊN|DU KHÁCH|BẾP/.test(s))return'cust';return null}
+function toast(t){var d=document.getElementById('toasts');if(!d)return;var e=document.createElement('div');e.className='toast';e.textContent=t;d.appendChild(e);setTimeout(function(){e.remove()},4500)}
+function apply(e){var tx=[];
+ if(e.m){S.mor=Math.max(0,Math.min(100,(S.mor||0)+e.m));tx.push((e.m>0?'+':'')+e.m+' '+K.m)}
+ if(e.r){S.rev=Math.max(0,Math.round(S.rev*(100+e.r))/100);tx.push((e.r>0?'+':'')+e.r+'% '+K.r)}
+ if(e.v){S.val=Math.max(0,Math.round(S.val*(100+e.v))/100);tx.push((e.v>0?'+':'')+e.v+'% '+K.v)}
+ if(e.c){S.cash=Math.max(0,Math.round((S.cash+e.c)*100)/100);tx.push((e.c>0?'+':'')+e.c+' '+K.c)}
+ return tx.join(', ')}
+var O=document.createElement('div');O.style.cssText='position:fixed;inset:0;z-index:28;display:none;background:rgba(8,14,30,.88);color:#fff;font:20px VT323,monospace;overflow:auto;padding:16px;text-align:center';document.body.appendChild(O);
+var pend=null,last={};
+function ask(n,t){var h='<div style="max-width:460px;margin:8vh auto;padding:14px;border:3px solid #ffc93c;border-radius:10px;background:#14203c"><div style="color:#38d6ff;font-size:22px">'+n.name+'</div><div style="margin:10px 0;font-size:24px">'+t.q+'</div>';
+ t.o.forEach(function(o,i){h+='<div data-i="'+i+'" style="margin:8px 0;padding:8px;border:2px solid #38d6ff;border-radius:8px;cursor:pointer;background:#1b2a4e">'+o[0]+'</div>'});
+ O.innerHTML=h+'</div>';O.style.display='block';var g=G();if(g&&g.player)g.player.busy=true;
+ O.querySelectorAll('[data-i]').forEach(function(el){el.onclick=function(){var o=t.o[+el.dataset.i];var r=apply(o[1]);
+  O.innerHTML='<div style="max-width:460px;margin:12vh auto;padding:14px;border:3px solid #6fe08a;border-radius:10px;background:#14203c"><div style="font-size:24px">'+o[2]+'</div><div style="color:#ffc93c;margin:8px 0">'+r+'</div><button id="tk" style="font:22px VT323,monospace;padding:4px 16px">OK</button></div>';
+  document.getElementById('tk').onclick=function(){O.style.display='none';var g=G();if(g&&g.player)g.player.busy=false};toast(n.name+': '+r)}})}
+setInterval(function(){try{var g=G();if(!g||!g.dlg||!g.map)return;var d=g.dlg;
+ if(!d._tw){var o=d.open;d.open=function(game,opts){try{var n=opts&&opts.npc;if(n&&opts.topic==='rd'&&/^cb_/.test(g.map.key)){var c=cat(n),k=g.map.key+'|'+n.name;
+   if(c&&TK[c]&&(!last[k]||Date.now()-last[k]>180000)){last[k]=Date.now();opts.pages=(opts.pages||[]).concat(['Sếp ơi, có việc cần sếp quyết định!']);pend={n:n,t:TK[c][rd(TK[c].length)]}}}}catch(e){}return o.call(this,game,opts)};d._tw=1}
+ if(pend&&!d.on){var p=pend;pend=null;setTimeout(function(){ask(p.n,p.t)},200)}}catch(e){}},250);
+})();
+</script>
+
 </body>
 </html>
